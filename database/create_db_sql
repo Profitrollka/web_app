@@ -1,0 +1,64 @@
+
+-- Table 'user'
+
+DROP TABLE IF EXISTS `user`;
+		
+CREATE TABLE `user` (
+  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `nickname` VARCHAR(64) NOT NULL DEFAULT 'NULL',
+  `first_name` VARCHAR(64) NULL DEFAULT NULL,
+  `last_name` VARCHAR(64) NULL DEFAULT NULL,
+  `email` VARCHAR(64) NOT NULL DEFAULT 'NULL',
+  `role` INTEGER NOT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- Table 'post'
+
+DROP TABLE IF EXISTS `post`;
+		
+CREATE TABLE `post` (
+  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `text` VARCHAR(16383) NOT NULL DEFAULT 'NULL',
+  `timestamp` DATETIME NOT NULL DEFAULT 'NULL',
+  `user_id` INTEGER NOT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+KEY ()
+);
+
+-- Table 'comment'
+
+DROP TABLE IF EXISTS `comment`;
+		
+CREATE TABLE `comment` (
+  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
+  `text` VARCHAR(100) NULL DEFAULT NULL,
+  `post_id` INTEGER NOT NULL DEFAULT NULL,
+  `user_id` INTEGER NOT NULL DEFAULT NULL,
+  `comment_id` INTEGER NULL DEFAULT NULL,
+  `timestamp` DATETIME NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- Foreign Keys 
+
+ALTER TABLE `post` ADD FOREIGN KEY (user_id) REFERENCES `user` (`id`);
+ALTER TABLE `comment` ADD FOREIGN KEY (post_id) REFERENCES `post` (`id`);
+ALTER TABLE `comment` ADD FOREIGN KEY (user_id) REFERENCES `user` (`id`);
+
+
+-- Table Properties
+
+-- ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `post` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `comment` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+-- Test Data
+
+-- INSERT INTO `user` (`id`,`nickname`,`first_name`,`last_name`,`email`,`role`) VALUES
+-- ('','','','','','');
+-- INSERT INTO `post` (`id`,`text`,`timestamp`,`user_id`) VALUES
+-- ('','','','');
+-- INSERT INTO `comment` (`id`,`text`,`post_id`,`user_id`,`comment_id`,`timestamp`) VALUES
+-- ('','','','','','');

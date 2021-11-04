@@ -194,12 +194,14 @@ ul {
 
 .tm-post-link-inner {
     overflow: hidden;
-    background: #af85bc;
+    background: #faf8fb;
 }
 
 .tm-post-link img {
     position: relative;
-	display: block;
+	display: inline-block;
+	top: 10px;
+	left: 100px;
 	min-height: auto;
 	max-width: 100%;
 	opacity: 0.8;
@@ -207,13 +209,13 @@ ul {
 
 .effect-lily img {
 	max-width: none;
-	width: -webkit-calc(100% + 50px);
-	width: calc(100% + 50px);
+	width: -webkit-calc(60%);
+	width: calc(60%);
 	opacity: 0.7;
 	-webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
 	transition: opacity 0.35s, transform 0.35s;
-	-webkit-transform: translate3d(-40px,0, 0);
-	transform: translate3d(-40px,0,0);
+	-webkit-transform: translate3d(-10px,0, 0);
+	transform: translate3d(-10px,0,0);
 }
 
 .effect-lily:hover img { opacity: 1; }
