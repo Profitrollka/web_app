@@ -1,27 +1,32 @@
-
 -- Table 'user'
 
 DROP TABLE IF EXISTS `user`;
-		
+
 CREATE TABLE `user` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `nickname` VARCHAR(64) NOT NULL DEFAULT 'NULL',
-  `first_name` VARCHAR(64) NULL DEFAULT NULL,
-  `last_name` VARCHAR(64) NULL DEFAULT NULL,
-  `email` VARCHAR(64) NOT NULL DEFAULT 'NULL',
-  `role` INTEGER NOT NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `nickname` VARCHAR(64) NOT NULL,
+  `first_name` VARCHAR(64) NOT NULL,
+  `last_name` VARCHAR(64) NOT NULL,
+  `email` VARCHAR(24) NOT NULL,
+  `role` INTEGER NOT NULL,
+  `password` VARCHAR(24) NOT NULL,
+  `created` DATETIME NOT NULL DEFAULT 'NULL',
+  `updated` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
 -- Table 'post'
 
 DROP TABLE IF EXISTS `post`;
-		
+
 CREATE TABLE `post` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `text` VARCHAR(16383) NOT NULL DEFAULT 'NULL',
-  `timestamp` DATETIME NOT NULL DEFAULT 'NULL',
-  `user_id` INTEGER NOT NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `text` VARCHAR(16383) NOT NULL,
+  `user_id` INTEGER NOT NULL,
+  `slug` VARCHAR(140) NOT NULL,
+  `title` VARCHAR(140) NULL DEFAULT NULL,
+  `created` DATETIME NOT NULL,
+  `updated` DATETIME NULL,
   PRIMARY KEY (`id`),
 KEY ()
 );
@@ -29,36 +34,66 @@ KEY ()
 -- Table 'comment'
 
 DROP TABLE IF EXISTS `comment`;
-		
+
 CREATE TABLE `comment` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `text` VARCHAR(100) NULL DEFAULT NULL,
-  `post_id` INTEGER NOT NULL DEFAULT NULL,
-  `user_id` INTEGER NOT NULL DEFAULT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `text` VARCHAR(100) NOT NULL,
+  `post_id` INTEGER NOT NULL,
+  `user_id` INTEGER NOT NULL,
   `comment_id` INTEGER NULL DEFAULT NULL,
-  `timestamp` DATETIME NULL DEFAULT NULL,
+  `created` DATETIME NOT NULL,
+  `updated` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
--- Foreign Keys 
+-- Table 'post_tags'
+
+DROP TABLE IF EXISTS `post_tags`;
+
+CREATE TABLE `post_tags` (
+  `post_id` INTEGER NOT NULL,
+  `tag_id` INTEGER NOT NULL,
+  PRIMARY KEY (`post_id`)
+);
+
+-- Table 'tag'
+
+
+DROP TABLE IF EXISTS `tag`;
+
+CREATE TABLE `tag` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(64) NOT NULL,
+  `slug` VARCHAR(140) NOT NULL,
+  `created` DATETIME NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- Foreign Keys
 
 ALTER TABLE `post` ADD FOREIGN KEY (user_id) REFERENCES `user` (`id`);
 ALTER TABLE `comment` ADD FOREIGN KEY (post_id) REFERENCES `post` (`id`);
 ALTER TABLE `comment` ADD FOREIGN KEY (user_id) REFERENCES `user` (`id`);
-
+ALTER TABLE `post_tags` ADD FOREIGN KEY (post_id) REFERENCES `post` (`id`);
+ALTER TABLE `post_tags` ADD FOREIGN KEY (tag_id) REFERENCES `tag` (`id`);
 
 -- Table Properties
 
 -- ALTER TABLE `user` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `post` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `comment` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+-- ALTER TABLE `post_tags` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `tag` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- Test Data
 
--- INSERT INTO `user` (`id`,`nickname`,`first_name`,`last_name`,`email`,`role`) VALUES
--- ('','','','','','');
--- INSERT INTO `post` (`id`,`text`,`timestamp`,`user_id`) VALUES
+-- INSERT INTO `user` (`id`,`nickname`,`first_name`,`last_name`,`email`,`role`,`password`,`created`,`updated`) VALUES
+-- ('','','','','','','','','');
+-- INSERT INTO `post` (`id`,`text`,`user_id`,`slug`,`title`,`created`,`updated`) VALUES
+-- ('','','','','','','');
+-- INSERT INTO `comment` (`id`,`text`,`post_id`,`user_id`,`comment_id`,`created`,`updated`) VALUES
+-- ('','','','','','','');
+-- INSERT INTO `post_tags` (`post_id`,`tag_id`) VALUES
+-- ('','');
+-- INSERT INTO `tag` (`id`,`name`,`slug`,`created`) VALUES
 -- ('','','','');
--- INSERT INTO `comment` (`id`,`text`,`post_id`,`user_id`,`comment_id`,`timestamp`) VALUES
--- ('','','','','','');
