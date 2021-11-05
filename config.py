@@ -12,6 +12,7 @@ class Configuration(object):
 
     # Database
     SQLALCHEMY_DATABASE_URI = environ.get("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_MIGRATE_REPO = path.join(basedir, 'db_repository')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # SQLALCHEMY_ECHO = False
 
