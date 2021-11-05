@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Ноme
+{% endblock %}
+
+{% block content %}
+<div class="row tm-row">
+                <article class="col-12 col-md-6 tm-post">
+                    <hr class="tm-hr-primary">
+                    <a href="post.html" class="effect-lily tm-post-link tm-pt-60">
+                        <div class="tm-post-link-inner">
+                            <img src="{{url_for('static', filename='img/IMG_3180.jpg')}}">
+                        </div>
+                        <span class="position-absolute tm-new-badge">New</span>
+                        <h2 class="tm-pt-30 tm-color-primary tm-post-title">Cinque Terre</h2>
+                    </a>
+                    <p class="tm-pt-30">
+                        The Italian Riviera is not short of rugged coastline or romantic towns and villages,
+                        but the five fishing communities of the
+                        <a rel="nofollow" href="https://www.lonelyplanet.com/articles/planning-visit-cinque-terre" target="_blank">Cinque Terre</a>
+                        are its most iconic highlight.
+                    </p>
+                    <div class="d-flex justify-content-between tm-pt-45">
+                        <span class="tm-color-primary">Travel . Italy</span>
+                        <span class="tm-color-primary">November 03, 2021</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span>36 comments</span>
+                        <span>by Admin Alena</span>
+                    </div>
+                </article>
+                <article class="col-12 col-md-6 tm-post">
+                    <hr class="tm-hr-primary">
+                    <a href="post.html" class="effect-lily tm-post-link tm-pt-60">
+                        <div class="tm-post-link-inner">
+                            <img src="{{url_for('static', filename='img/56c89a1a-5add-46b2-b988-57e307447745.JPG')}}">
+                        </div>
+                        <span class="position-absolute tm-new-badge">New</span>
+                        <h2 class="tm-pt-30 tm-color-primary tm-post-title">Lake Maggiore</h2>
+                    </a>
+                    <p class="tm-pt-30">
+                        <a rel="nofollow" href="https://www.britannica.com/place/Lake-Maggiore" target="_blank">Lake-Maggiore</a>
+                        , Italian Lago Maggiore, Latin Lacus Verbanus, second largest lake in Italy (area 82 square miles [212 square km]), bisected by the border between
+                        Lombardy (east) and Piedmont (west). Its northern end is in the Swiss Ticino canton. At an elevation of 633 feet (193 metres) above sea level, the lake is 34
+                        miles (54 km) long, with a maximum width of 7 miles (11 km) and a maximum depth of 1,220 feet (372 metres).
+                    </p>
+                    <div class="d-flex justify-content-between tm-pt-45">
+                        <span class="tm-color-primary">Travel . Italy</span>
+                        <span class="tm-color-primary">November 03, 2021</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span>48 comments</span>
+                        <span>by Admin Alena</span>
+                    </div>
+                </article>
+</div>
+{% endblock %}
