@@ -1,5 +1,8 @@
-from . import app
-from flask import render_template
+from . import app, db
+from .forms import LoginForm
+from .models import User
+from flask import render_template, flash, redirect, url_for
+from flask_login import current_user, login_user, logout_user, login_required
 
 
 @app.route('/')
@@ -7,23 +10,44 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/user/<int:user_id>')
-def profile(user_id):
-    return "Profile page of user {}".format(user_id)
-
-# @app.route('/login/', methods=['post', 'get'])
+# @app.route('/login', methods=['POST', 'GET'])
 # def login():
 #     if current_user.is_authenticated:
-# 	return redirect(url_for('admin'))
+#         return redirect(url_for('index'))
 #     form = LoginForm()
 #     if form.validate_on_submit():
-# 	user = db.session.query(User).filter(User.username == form.username.data).first()
-# 	if user and user.check_password(form.password.data):
-# 	    login_user(user, remember=form.remember.data)
-# 	     return redirect(url_for('admin'))
-# 	flash("Invalid username/password", 'error')
-# 	return redirect(url_for('login'))
-#     return render_template('login.html', form=form)
+#         user = User.query.filter_by(username=form.username.data).first()
+#         if user is None or not user.check_password(form.password.data):
+#             flash("Invalid username or password")
+#             return redirect(url_for('login'))
+#         login_user(user, remember=form.remember.data)
+#         return redirect(url_for('index'))
+#     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session.query(User).filter(User.nickname == form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember.data)
+            return redirect(url_for('index'))
+        flash("Invalid username or password", 'error')
+        return redirect(url_for('login'))
+    return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/profile')
+@login_required
+def profile():
+    return redirect(url_for('index'))
+
 
 # @app.route('/contact/', methods=['get', 'post'])
 # def contact():

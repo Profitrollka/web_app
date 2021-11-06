@@ -28,11 +28,22 @@ https://templatemo.com/tm-553-xtra-blog
             </div>
             <nav class="tm-nav" id="tm-nav">
                 <ul>
-                    <li class="tm-nav-item active"><a href=" {{ url_for('index') }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('index') }}" class="tm-nav-link">
                         <i class="fas fa-home"></i>
                         Home
                     </a></li>
-                    <li class="tm-nav-item"><a href=" {{ url_for('index') }}" class="tm-nav-link">
+                    {% if current_user.is_anonymous %}
+                    <li class="tm-nav-item"><a href="{{ url_for('login') }}" class="tm-nav-link">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Login
+                    </a></li>
+                    {%  else %}
+                    <li class="tm-nav-item"><a href="{{ url_for('login') }}" class="tm-nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a></li>
+                    {% endif %}
+                    <li class="tm-nav-item"><a href="{{ url_for('index') }}" class="tm-nav-link">
                         <i class="fas fa-pen"></i>
                         Single Post
                     </a></li>
@@ -43,6 +54,10 @@ https://templatemo.com/tm-553-xtra-blog
                     <li class="tm-nav-item"><a href="contact.html" class="tm-nav-link">
                         <i class="far fa-comments"></i>
                         Contact Us
+                    </a></li>
+                    <li class="tm-nav-item"><a href="{{ url_for('profile') }}" class="tm-nav-link">
+                        <i class="far fa-user-circle"></i>
+                        Profile
                     </a></li>
                 </ul>
             </nav>
@@ -121,8 +136,5 @@ https://templatemo.com/tm-553-xtra-blog
             </footer>
         </main>
     </div>
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/templatemo-script.js"></script>
 </body>
 </html>

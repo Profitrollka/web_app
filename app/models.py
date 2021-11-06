@@ -1,18 +1,18 @@
-from . import db
-# login_manager
+from . import db, login_manager
 from datetime import datetime
 import re
-# from flask_login import (LoginManager, UserMixin, login_required,login_user, current_user, logout_user)
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 ROLE = {'user': 0, 'moderator': 1, 'admin': 2}
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     return db.session.query(User).get(user_id)
-# class User(db.Model, UserMixin):
 
-class User(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)  # db.session.query(User).get(user_id)
+
+
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nickname = db.Column(db.String(64), nullable=False, index=True, unique=True)
     first_name = db.Column(db.String(64), nullable=False)
@@ -74,4 +74,3 @@ class Comment(db.Model):
 
     def __repr__(self):
         return "<{}:{}>".format(self.id, self.text[:10])
-
