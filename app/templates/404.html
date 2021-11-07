@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title%}
+Error 404
+{% endblock %}
+
+{% block content %}
+<h1>Page Not Found</h1>
+<p class="row tm-row tm-mt-100 tm-mb-50"><a href="{{ url_for('index') }} " class="tm-btn-back">Back</a></p>
+{% endblock %}

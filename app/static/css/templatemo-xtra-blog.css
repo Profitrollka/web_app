@@ -263,6 +263,19 @@ ul {
 
 .tm-btn-small { padding: 8px 33px; }
 
+.tm-btn-back {
+    display: inline-block;
+    height:60px;
+    width:83px;
+    border-radius: 5px;
+    font-size: 1.3rem;
+    transition: all 0.3s ease;
+    background-color: #cfb6d7;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+}
+
 .tm-btn-primary:hover {
     background-color: #cfb6d7;
     color: white;

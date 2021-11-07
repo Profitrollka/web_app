@@ -1,50 +1,95 @@
-from . import app
-from flask import render_template
+from . import app, db
+from .forms import LoginForm, RegistrationForm, EditProfileForm
+from .models import User
+from flask import render_template, flash, redirect, url_for, request
+from flask_login import current_user, login_user, logout_user, login_required
+from werkzeug.urls import url_parse
+from datetime import datetime
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', title='Home')
 
 
-@app.route('/user/<int:user_id>')
-def profile(user_id):
-    return "Profile page of user {}".format(user_id)
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
 
-# @app.route('/login/', methods=['post', 'get'])
-# def login():
-#     if current_user.is_authenticated:
-# 	return redirect(url_for('admin'))
-#     form = LoginForm()
-#     if form.validate_on_submit():
-# 	user = db.session.query(User).filter(User.username == form.username.data).first()
-# 	if user and user.check_password(form.password.data):
-# 	    login_user(user, remember=form.remember.data)
-# 	     return redirect(url_for('admin'))
-# 	flash("Invalid username/password", 'error')
-# 	return redirect(url_for('login'))
-#     return render_template('login.html', form=form)
 
-# @app.route('/contact/', methods=['get', 'post'])
-# def contact():
-#     form = ContactForm()
-#     if form.validate_on_submit():
-#         name = form.name.data
-#         email = form.email.data
-#         message = form.message.data
-#
-#         # здесь логика БД
-#         feedback = Feedback(name=name, email=email, message=message)
-#         db.session.add(feedback)
-#         db.session.commit()
-#
-#         send_mail("New Feedback", app.config['MAIL_DEFAULT_SENDER'], 'mail/feedback.html',
-#                   name=name, email=email)
-#
-#         flash("Message Received", "success")
-#         return redirect(url_for('contact'))
-#
-#     return render_template('contact.html', form=form)
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = db.session.query(User).filter(User.nickname == form.username.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            if not next_page or url_parse(next_page).netloc != '':
+                next_page = url_for('index')
+            return redirect(next_page)
+        flash("Invalid username or password", 'error')
+        return redirect(url_for('login', next=request.endpoint))
+    return render_template('login.html', title='Login', form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+@app.route('/profile/<username>')
+@login_required
+def profile(username):
+    user = User.query.filter_by(nickname=username).first_or_404()
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    comments = [
+        {'author': user, 'body': 'Test comment #1'},
+        {'author': user, 'body': 'Test comment #2'}
+    ]
+    return render_template('profile.html', user=user, posts=posts, comments=comments)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(nickname=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/edit_profile', methods=['POST', 'GET'])
+@login_required
+def edit_profile():
+    form = EditProfileForm(current_user.nickname, current_user.email)
+    if form.validate_on_submit():
+        current_user.nickname = form.username.data
+        current_user.email = form.email.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash("Your changes have been saved")
+        return redirect(url_for('profile', username=current_user.nickname))
+    elif request.method == 'GET':
+        form.username.data = current_user.nickname
+        form.email.data = current_user.email
+        form.about_me.data = current_user.about_me
+    return render_template('edit_profile.html', form=form)
+
 #
 #
 # @app.route('/cookie/')
