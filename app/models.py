@@ -19,12 +19,14 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(24), index=True, unique=True)
     role = db.Column(db.Integer, default=ROLE['user'])
-    password = db.Column(db.String(24), nullable=False,)
+    password = db.Column(db.String(240), nullable=False,)
+    about_me = db.Column(db.String(140))
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __repr__(self):
-        return "User id: {}, name: {}".format(self.id, self.nickname)
+        return "User id: {}, username: {}".format(self.id, self.nickname)
 
     def set_password(self, user_password):
         self.password = generate_password_hash(user_password)

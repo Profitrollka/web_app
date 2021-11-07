@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title%}
+Error 500
+{% endblock %}
+
+{% block content %}
+<h1>An unexpected error has occurred</h1>
+<p>The administrator has been notified. Sorry for the inconvenience!</p>
+<p class="row tm-row tm-mt-100 tm-mb-50"><a href="{{ url_for('index') }} " class="tm-btn-back">Back</a></p>
+
+{% endblock %}
