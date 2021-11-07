@@ -90,6 +90,18 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
 
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/post')
+def post():
+    return render_template('post.html')
+
 #
 #
 # @app.route('/cookie/')
