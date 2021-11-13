@@ -52,10 +52,7 @@ def logout():
 @login_required
 def profile(username):
     user = User.query.filter_by(nickname=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
+    posts = Post.query.order_by(Post.created.desc())
     comments = [
         {'author': user, 'body': 'Test comment #1'},
         {'author': user, 'body': 'Test comment #2'}
