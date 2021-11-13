@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField, FileField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
 from email_validator import validate_email, EmailNotValidError
 from .models import User
@@ -64,3 +64,26 @@ class EditProfileForm(FlaskForm):
                 validate_email()
             except EmailNotValidError:
                 raise ValidationError('Email address is not valid')
+
+class PostForm(FlaskForm):
+
+    title = StringField("Title", validators=[DataRequired(), Length(min=0, max=140)])
+    intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
+    text = TextAreaField("Text", validators=[DataRequired()])
+    file = FileField("Files")
+    ALLOWED_EXTENSIONS = set(['png', 'jpg'])
+    submit = SubmitField('Add post')
+
+    def __init__(self, user_id, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.user_id = user_id
+
+    def allowed_file(self, filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
+
+
+
+
+
+

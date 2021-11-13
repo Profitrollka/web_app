@@ -1,108 +1,40 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Single post
-{% endblock %}
+Add post
+{% endblock %} | Travel blog
 
 {% block content %}
-
-<div class="row tm-row">
-    <div class="col-12">
-        <hr class="tm-hr-primary tm-mb-55">
-        <!-- Video player 1422x800 -->
-        <video width="954" height="535" controls class="tm-mb-40">
-            <source src="{{ url_for('static', filename='video/IMG_3042.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
-</div>
-<div class="row tm-row">
-    <div class="col-lg-8 tm-post-col">
-        <div class="tm-post-full">
-            <div class="mb-4">
-                <h2 class="pt-2 tm-color-primary tm-post-title">Portovenere</h2>
-                <p class="tm-mb-40">June 16, 2020 posted by Admin Alena</p>
-                <p>
-                    Portovenere is a medieval fishing village situated in north Italy, just south of the
-                    <a rel="nofollow" href="https://www.cinqueterre.eu.com/en/" target="_blank">Cinque Terre</a>
-                    the Italian Riviera. This charming village is well worth the visit and can be reached from the
-                    Cinque Terre by boat or from La Spezia by
-                    <a rel="nofollow" href="https://www.cinqueterre.eu.com/en/boat-excursions" target="_blank">boat </a>
-                    or by bus from the train station.
-                </p>
-                <p>
-                    Portovenere, on the Gulf of Poets, is a UNESCO World Heritage site. Its picturesque harbor is lined
-                    with brightly colored houses while narrow medieval streets lined with shops lead up the hill from
-                    the ancient city gate to the castle. Stroll around the old town and don't miss the small shop Bajeicò,
-                    a pesto shop selling delicious freshly made basil-based sauce and related products like fresh pasta.
-                </p>
-                <p>
-                    The tip of the promontory holds a picturesque church. Byron's Cave is a rocky area leading to the
-                    sea where the poet Byron used to swim.
-                </p>
-                <p>
-                    Ferries cruise along the coast each day, offering passengers a chance to have a view of one of the
-                    most evocative landscapes of the Mediterranean. It is possible to visit the three nearby islands by
-                    boat; Palmaria, Tino and Tinetto.
-                </p>
-                <span class="d-block text-right tm-color-primary">Travel . Italy</span>
-            </div>
-
-            <!-- Comments -->
-            <div>
-                <h2 class="tm-color-primary tm-post-title">Comments</h2>
-                <hr class="tm-hr-primary tm-mb-45">
-                <div class="tm-comment tm-mb-45">
-                    <figure class="tm-comment-figure">
-                        <img src="{{ url_for('static', filename='img/img_1.jpg') }}" alt="Image" class="mb-2 rounded-circle img-thumbnail">
-                        <figcaption class="tm-color-primary text-center">Mark Sonny</figcaption>
-                    </figure>
-                    <div>
-                        <p>
-                            What a beautifull place!!! I will definitely have to visit here.
-                        </p>
-                        <div class="d-flex justify-content-between">
-                            <a href="#" class="tm-color-primary">REPLY</a>
-                            <span class="tm-color-primary">June 14, 2020</span>
-                        </div>
-                    </div>
-                </div>
-                <form action="" class="mb-5 tm-comment-form">
-                    <h2 class="tm-color-primary tm-post-title mb-4">Your comment</h2>
-                    <div class="mb-4">
-                        <input class="form-control" name="name" type="text">
-                    </div>
-                    <div class="mb-4">
-                        <input class="form-control" name="email" type="text">
-                    </div>
-                    <div class="mb-4">
-                        <textarea class="form-control" name="message" rows="6"></textarea>
-                    </div>
-                    <div class="text-right">
-                        <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <aside class="col-lg-4 tm-aside-col">
-        <div class="tm-post-sidebar">
-            <hr class="mb-3 tm-hr-primary">
-            <h2 class="mb-4 tm-post-title tm-color-primary">Categories</h2>
-            <ul class="tm-mb-75 pl-5 tm-category-list">
-                <li><a href="#" class="tm-color-primary">Travel Events</a></li>
-                <li><a href="#" class="tm-color-primary">Video and Audio</a></li>
-            </ul>
-            <hr class="mb-3 tm-hr-primary">
-            <h2 class="tm-mb-40 tm-post-title tm-color-primary">Related Posts</h2>
-            <a href="#" class="d-block tm-mb-40">
-                <figure>
-                    <img src="{{url_for('static', filename='img/56c89a1a-5add-46b2-b988-57e307447745.JPG')}}" alt="Image" class="mb-3 img-fluid">
-                    <figcaption class="tm-color-primary">Cinque Terre</figcaption>
-                </figure>
-            </a>
-        </div>
-    </aside>
-</div>
+    <h1 class="pt-2 tm-color-primary tm-post-title">Add new post</h1>
+    <form action="" method="post" novalidate enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(size=100) }}<br>
+            {% for error in form.title.errors %}
+            <span style="color:red">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.intro.label }}<br>
+            {{ form.intro(rows='3',cols='100') }}<br>
+            {% for error in form.intro.errors  %}
+            <span style="color:red">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.text.label }}<br>
+            {{ form.text(rows='10',cols='100') }}<br>
+            {% for error in form.text.errors  %}
+            <span style="color:red">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+        <label for="tm-uploadbtn" class="uploadButton">Add file</label>
+        <input style="opacity: 0; z-index: -1;" multiple type="file" name="upload" id="tm-uploadbtn"
+               onchange='document.querySelector(".uploadButton div").innerHTML = Array.from(this.files).map(f => f.name).join("<br />")' />
+        </p>
+        <p href="#" class="tm-btn tm-btn-primary:hover">{{ form.submit() }}</p>
+    </form>
 
 {% endblock %}

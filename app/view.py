@@ -1,15 +1,20 @@
 from . import app, db
-from .forms import LoginForm, RegistrationForm, EditProfileForm
-from .models import User
-from flask import render_template, flash, redirect, url_for, request
+from .forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
+from .models import User, Post
+from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+from werkzeug.utils import secure_filename
 from datetime import datetime
+import os
 
 
 @app.route('/')
 def index():
-    return render_template('index.html', title='Home')
+    posts = Post.query.order_by(Post.created.desc())
+    for post in posts:
+        filename = post.img_name
+    return render_template('index.html', title='Home', posts=posts, filename=filename)
 
 
 @app.before_request
@@ -90,19 +95,47 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
 
+
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
 
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-@app.route('/post')
-def post():
-    return render_template('post.html')
 
-#
+@app.route('/post', methods=['GET', 'POST'])
+@login_required
+def post():
+    form = PostForm(current_user.id)
+    img = None
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if 'upload' not in request.files:
+                return redirect(request.url)
+            file = request.files['upload']
+            if file and form.allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                img = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(os.path.join(img))
+            post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.id,
+                    img_path=img, img_name=filename)
+            try:
+                db.session.add(post)
+                db.session.commit()
+                flash("Post added")
+                return redirect('/')
+            except:
+                return 'An error occurred when adding a post. Please try again later.'
+    return render_template('post.html', title='Post', form=form)
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
 #
 # @app.route('/cookie/')
 # def cookie():

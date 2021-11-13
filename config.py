@@ -20,6 +20,7 @@ class BaseConfig:
     SECRET_KEY = environ.get('SECRET_KEY')
     FLASK_APP = environ.get('FLASK_APP')
     FLASK_ENV = environ.get('FLASK_ENV')
+    UPLOAD_FOLDER = environ.get('UPLOAD_FOLDER')
 
     #Flask-Mail #
     MAIL_SERVER = environ.get('MAIL_SERVER')
@@ -28,3 +29,5 @@ class BaseConfig:
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
     ADMINS = environ.get('ADMINS')
+
+

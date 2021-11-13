@@ -44,11 +44,14 @@ post_tags = db.Table('post_tags',
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
+    intro = db.Column(db.String(360), nullable=False)
     text = db.Column(db.Text(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    slug = db.Column(db.String(140), nullable=False, index=True, unique=True)
+    img_path = db.Column(db.String(140), nullable=True)
+    img_name = db.Column(db.String(140), nullable=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
     def __repr__(self):
         return "<{}:{}>".format(self.id, self.title)

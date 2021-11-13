@@ -179,6 +179,26 @@ ul {
     transition: all 0.3s ease;
 }
 
+.tm-uploadButton {
+    display: block;
+    width: 100px;
+    background: #cfb6d7;
+    padding: 10px;
+    color: #ССС;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: Tahoma;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.uploadButton:hover {
+    background: #cfb6d7;
+}
+.uploadButton div{
+  color: #999;
+}
+
 .tm-search-button:hover { background-color: #af85bc; }
 
 .tm-search-icon {
