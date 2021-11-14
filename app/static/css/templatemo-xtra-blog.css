@@ -458,6 +458,14 @@ a:hover figcaption { color: #af85bc; }
 .tm-contact-form label { font-size: 1.4rem; }
 .tm-contact-form .form-group { display: flex; }
 
+.leftimg {
+float:left; /* Выравнивание по левому краю */
+margin: 7px 7px 7px 0; /* Отступы вокруг картинки */
+}
+.rightimg  {
+float: right; /* Выравнивание по правому краю  */
+margin: 7px 0 7px 7px; /* Отступы вокруг картинки */
+
 @media (max-width: 1540px) {
     .tm-header { width: 320px; }
 

@@ -1,6 +1,6 @@
 from . import app, db
-from .forms import LoginForm, RegistrationForm, EditProfileForm, PostForm
-from .models import User, Post
+from .forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, CommentForm
+from .models import User, Post, Comment
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
@@ -9,12 +9,29 @@ from datetime import datetime
 import os
 
 
-@app.route('/')
-def index():
-    posts = Post.query.order_by(Post.created.desc())
-    for post in posts:
-        filename = post.img_name
-    return render_template('index.html', title='Home', posts=posts, filename=filename)
+@app.template_filter('get_nickname')
+def get_username_name_by_user_key(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    return user.nickname
+
+
+@app.template_filter('get_avatar')
+def get_username_avatar_by_user_key(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    return user.avatar_name
+
+@app.template_filter('get_date')
+def get_date_by_datetime(datetime):
+    date = str(datetime)[:10]
+    return date
+
+@app.template_filter('get_comments_count')
+def get_comments_count(post_id):
+    count = 0
+    comments = Comment.query.filter_by(post_id=post_id)
+    for comment in comments:
+        count += 1
+    return count
 
 
 @app.before_request
@@ -22,6 +39,12 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+
+@app.route('/')
+def index():
+    posts = Post.query.order_by(Post.created.desc())
+    return render_template('index.html', title='Home', posts=posts)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -52,7 +75,7 @@ def logout():
 @login_required
 def profile(username):
     user = User.query.filter_by(nickname=username).first_or_404()
-    posts = Post.query.order_by(Post.created.desc())
+    posts = Post.query.filter(Post.user_id==user.id).order_by(Post.created.desc())
     comments = [
         {'author': user, 'body': 'Test comment #1'},
         {'author': user, 'body': 'Test comment #2'}
@@ -62,30 +85,61 @@ def profile(username):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    img = None
+    img_name = None
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(nickname=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if 'upload' not in request.files:
+                return redirect(request.url)
+            file = request.files['upload']
+            if file and form.allowed_file(file.filename):
+                img_name = secure_filename(file.filename)
+                img = os.path.join(app.config['UPLOAD_FOLDER'], img_name)
+                file.save(os.path.join(img))
+            user = User(nickname=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data,
+                        email=form.email.data, avatar_path=img, avatar_name=img_name)
+            user.set_password(form.password.data)
+            try:
+                db.session.add(user)
+                db.session.commit()
+                flash('Congratulations, you are now a registered user!')
+                return redirect('/')
+            except:
+                return 'An error occurred when adding a post. Please try again later.'
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
 
 
 @app.route('/edit_profile', methods=['POST', 'GET'])
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.nickname, current_user.email)
-    if form.validate_on_submit():
-        current_user.nickname = form.username.data
-        current_user.email = form.email.data
-        current_user.about_me = form.about_me.data
-        db.session.commit()
-        flash("Your changes have been saved")
-        return redirect(url_for('profile', username=current_user.nickname))
+    img = None
+    img_name = None
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            current_user.nickname = form.username.data
+            current_user.email = form.email.data
+            current_user.about_me = form.about_me.data
+            if 'upload' not in request.files:
+                return redirect(request.url)
+            file = request.files['upload']
+            if file and form.allowed_file(file.filename):
+                img_name = secure_filename(file.filename)
+                img = os.path.join(app.config['UPLOAD_FOLDER'], img_name)
+                file.save(os.path.join(img))
+                current_user.avatar_path = img
+                current_user.avatar_name = img_name
+            try:
+                db.session.commit()
+                flash("Your changes have been saved")
+            except:
+                'An error occurred when adding a post. Please try again later.'
+            return redirect(url_for('profile', username=current_user.nickname))
     elif request.method == 'GET':
         form.username.data = current_user.nickname
         form.email.data = current_user.email
@@ -128,12 +182,35 @@ def post():
                 return 'An error occurred when adding a post. Please try again later.'
     return render_template('post.html', title='Post', form=form)
 
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-#
+
+@app.route('/post/<int:id>', methods=['GET', 'POST'])
+def single_post(id):
+    user = current_user
+    form = CommentForm()
+    post = Post.query.get(id)
+    posts = Post.query.order_by(Post.created.desc())
+    comments = Comment.query.filter(Comment.post_id == id)
+    if request.method == 'POST':
+        if current_user.is_authenticated:
+            if form.validate_on_submit():
+                comment = Comment(text=form.text.data, user_id=current_user.id, post_id=id)
+                try:
+                    db.session.add(comment)
+                    db.session.commit()
+                except:
+                    'An error occurred when adding a post. Please try again later.'
+    # if comments is None:
+    #     return render_template('single_post.html', post=post, posts=posts, form=form)
+    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form)
+
+
+
+
 # @app.route('/cookie/')
 # def cookie():
 #     if not request.cookies.get('foo'):

@@ -6,7 +6,7 @@ Registration
 
 {% block content %}
     <h1 class="pt-2 tm-color-primary tm-post-title">Registration</h1>
-    <form action="" method="post" novalidate>
+    <form action="" method="post" novalidate enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <p>
             {{ form.first_name.label }}<br>
@@ -50,8 +50,14 @@ Registration
             <span style="color:red">{{ error }}</span>
             {% endfor %}
         </p>
-        <p href="#" class="tm-btn tm-btn-primary:hover">{{ form.submit() }}</p>
-
+        <p>
+        <label for="tm-uploadbtn" class="uploadButton">Add file</label>
+        <input style="opacity: 0; z-index: -1;" multiple type="file" name="upload" id="tm-uploadbtn"
+               onchange='document.querySelector(".uploadButton div").innerHTML = Array.from(this.files).map(f => f.name).join("<br />")' />
+        </p>
+        <div class="text-right">
+        <button href="#" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+        </div>
     </form>
 
 {% endblock %}
