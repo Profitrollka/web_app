@@ -179,6 +179,26 @@ ul {
     transition: all 0.3s ease;
 }
 
+.tm-uploadButton {
+    display: block;
+    width: 100px;
+    background: #cfb6d7;
+    padding: 10px;
+    color: #ССС;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: Tahoma;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.uploadButton:hover {
+    background: #cfb6d7;
+}
+.uploadButton div{
+  color: #999;
+}
+
 .tm-search-button:hover { background-color: #af85bc; }
 
 .tm-search-icon {
@@ -437,6 +457,14 @@ a:hover figcaption { color: #af85bc; }
 
 .tm-contact-form label { font-size: 1.4rem; }
 .tm-contact-form .form-group { display: flex; }
+
+.leftimg {
+float:left; /* Выравнивание по левому краю */
+margin: 7px 7px 7px 0; /* Отступы вокруг картинки */
+}
+.rightimg  {
+float: right; /* Выравнивание по правому краю  */
+margin: 7px 0 7px 7px; /* Отступы вокруг картинки */
 
 @media (max-width: 1540px) {
     .tm-header { width: 320px; }

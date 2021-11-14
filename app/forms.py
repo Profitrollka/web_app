@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField, FileField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
 from email_validator import validate_email, EmailNotValidError
 from .models import User
@@ -13,6 +13,7 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     first_name = StringField("First name", validators=[DataRequired()])
     last_name = StringField("Last name", validators=[DataRequired()])
     username = StringField("Username", validators=[DataRequired()])
@@ -20,8 +21,8 @@ class RegistrationForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign in')
-
+    file = FileField("Files")
+    submit = SubmitField('Submit')
 
     def validate_username(self, username):
         user = User.query.filter_by(nickname=self.username.data).first()
@@ -37,11 +38,17 @@ class RegistrationForm(FlaskForm):
         except EmailNotValidError:
             raise ValidationError('Email address is not valid')
 
+    def allowed_file(self, filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
+
 
 class EditProfileForm(FlaskForm):
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     username = StringField("Username", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
     about_me = TextAreaField("About me", validators=[Length(min=0, max=140)])
+    file = FileField("Files")
     submit = SubmitField('Submit')
 
     def __init__(self, original_username, original_email, *args, **kwargs):
@@ -64,3 +71,40 @@ class EditProfileForm(FlaskForm):
                 validate_email()
             except EmailNotValidError:
                 raise ValidationError('Email address is not valid')
+
+    def allowed_file(self, filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
+
+class PostForm(FlaskForm):
+    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+    title = StringField("Title", validators=[DataRequired(), Length(min=0, max=140)])
+    intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
+    text = TextAreaField("Text", validators=[DataRequired()])
+    file = FileField("Files")
+    submit = SubmitField('Add post')
+
+    def __init__(self, user_id, *args, **kwargs):
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.user_id = user_id
+
+    def allowed_file(self, filename):
+        return '.' in filename and \
+               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
+
+
+class CommentForm(FlaskForm):
+    text = TextAreaField("Your comment", validators=[DataRequired(), Length(min=0, max=100)])
+    submit = SubmitField('Add comment')
+
+
+
+
+
+
+
+
+
+
+
+

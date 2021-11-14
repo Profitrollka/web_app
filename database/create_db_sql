@@ -27,6 +27,9 @@ CREATE TABLE `post` (
   `title` VARCHAR(140) NULL DEFAULT NULL,
   `created` DATETIME NOT NULL,
   `updated` DATETIME NULL,
+  `intro` VARCHAR(360) NOT NULL,
+  `img_path` VARCHAR(140) NULL DEFAULT NULL,
+  `img_name` VARCHAR(140) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
 KEY ()
 );

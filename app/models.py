@@ -9,7 +9,7 @@ ROLE = {'user': 0, 'moderator': 1, 'admin': 2}
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(user_id)  # db.session.query(User).get(user_id)
+    return User.query.get(user_id)
 
 
 class User(UserMixin, db.Model):
@@ -21,6 +21,8 @@ class User(UserMixin, db.Model):
     role = db.Column(db.Integer, default=ROLE['user'])
     password = db.Column(db.String(240), nullable=False,)
     about_me = db.Column(db.String(140))
+    avatar_path = db.Column(db.String(140), nullable=True)
+    avatar_name = db.Column(db.String(140), nullable=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -44,11 +46,14 @@ post_tags = db.Table('post_tags',
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(140), nullable=False)
+    intro = db.Column(db.String(360), nullable=False)
     text = db.Column(db.Text(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    slug = db.Column(db.String(140), nullable=False, index=True, unique=True)
+    img_path = db.Column(db.String(140), nullable=True)
+    img_name = db.Column(db.String(140), nullable=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+
 
     def __repr__(self):
         return "<{}:{}>".format(self.id, self.title)
@@ -70,7 +75,7 @@ class Comment(db.Model):
     text = db.Column(db.String(100))
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    comment_id = db.Column(db.Integer)
+    comment_id = db.Column(db.Integer, nullable=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
 

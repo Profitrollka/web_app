@@ -5,26 +5,49 @@ Profile
 {% endblock %} | Travel blog
 
 {% block content %}
+    <a href="{{ url_for('uploaded_file', filename=user.avatar_name) }}">
+    <div class="tm-post-link-inner">
+        <img src="{{ url_for('uploaded_file', filename=user.avatar_name) }}" width="100" height="100"/>
+    </div>
+    </a>
+    <div class="tm-post-link-inner">
     <h2 class="tm-pt-30 tm-color-primary">User name:</h2>
         <h3 style="color:#999;"> {{ user.nickname }} </h3>
-            {% if user.last_seen %}<h6 style="color:#999;">last seen {{ user.last_seen }}</h6>{% endif %}
+    {% if user.last_seen %}
+    <h6 style="color:#999;">last seen {{ user.last_seen }}</h6>
+    {% endif %}
+    </div>
     <hr>
+    <div class="tm-post-link-inner">
     <h2 class="tm-pt-30 tm-color-primary">About me:</h2>
-    {% if user.about_me %}<h3 style="color:#999;">{{ user.about_me }}</h3>{% endif %}
+    {% if user.about_me %}<h5 style="color:#999;">{{ user.about_me }}</h5>{% endif %}
+    </div>
     <hr>
+    <div class="tm-post-link-inner">
     <h2 class="tm-pt-30 tm-color-primary">Email:</h2>
-        <h4 style="color:#999;">{{ user.email }}</h4>
+        <h5 style="color:#999;">{{ user.email }}</h5>
+    </div>
     <hr>
     <h2 class="tm-pt-30 tm-color-primary">Posts:</h2>
     {% for post in posts %}
-    <p> <b>{{ post.body }}</b> </p>
+    <div class="tm-post-link-inner">
+    <figure>
+        <img src="{{ url_for('uploaded_file', filename=post.img_name) }}" width="100" height="100" />
+        <p><a href="{{ url_for('single_post', id=post.id) }}" class="tm-color-primary"> {{ post.title }}</a></p>
+    </figure>
+    <p><a> {{ post.intro }}</a> </p>
     {% endfor %}
+    </div>
     <hr>
+    <div class="tm-post-link-inner">
     <h2 class="tm-pt-30 tm-color-primary">Comments:</h2>
     {% for comment in comments %}
     <p> <b>{{ comment.body }}</b> </p>
     {% endfor %}
+    </div>
+
 {% if user == current_user %}
-<p><a href="{{ url_for('edit_profile') }}"> Edit profile</a>
-    {% endif %}
+<p><a href="{{ url_for('edit_profile') }}" class="tm-color-primary"> Edit profile</a></p>
+{% endif %}
+
 {% endblock %}
