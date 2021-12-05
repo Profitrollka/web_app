@@ -171,6 +171,8 @@ def post():
                 filename = secure_filename(file.filename)
                 img = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(os.path.join(img))
+            # if form.tag.data is not None:
+            #     tag = Tag(name=form.tag.data, slug=sl)
             post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.id,
                     img_path=img, img_name=filename)
             try:
@@ -204,8 +206,6 @@ def single_post(id):
                     db.session.commit()
                 except:
                     'An error occurred when adding a post. Please try again later.'
-    # if comments is None:
-    #     return render_template('single_post.html', post=post, posts=posts, form=form)
     return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form)
 
 

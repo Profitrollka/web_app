@@ -82,6 +82,7 @@ class PostForm(FlaskForm):
     intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
     text = TextAreaField("Text", validators=[DataRequired()])
     file = FileField("Files")
+    # tag = StringField("Title", validators=[Length(min=0, max=64)])
     submit = SubmitField('Add post')
 
     def __init__(self, user_id, *args, **kwargs):

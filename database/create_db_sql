@@ -12,6 +12,10 @@ CREATE TABLE `user` (
   `password` VARCHAR(240) NOT NULL,
   `created` DATETIME NOT NULL DEFAULT 'NULL',
   `updated` DATETIME NULL DEFAULT NULL,
+  `avatar_path` VARCHAR(140) NULL DEFAULT NULL,
+  `avatar_name` VARCHAR(140) NULL DEFAULT NULL,
+  `about_me` VARCHAR(140) NULL DEFAULT NULL,
+  `last_seen` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -30,6 +34,7 @@ CREATE TABLE `post` (
   `intro` VARCHAR(360) NOT NULL,
   `img_path` VARCHAR(140) NULL DEFAULT NULL,
   `img_name` VARCHAR(140) NULL DEFAULT NULL,
+
   PRIMARY KEY (`id`),
 KEY ()
 );

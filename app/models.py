@@ -3,6 +3,7 @@ from datetime import datetime
 import re
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+# from slugify import slugify
 
 ROLE = {'user': 0, 'moderator': 1, 'admin': 2}
 
@@ -68,6 +69,11 @@ class Tag(db.Model):
 
     def __repr__(self):
         return "<{}:{}>".format(self.id, self.name)
+
+    # def __init__(self, *args, **kwargs):
+    #     if not 'slug' in kwargs:
+    #         kwargs['slug'] = slugify(kwargs.get('title', ''))
+    #     super().__init__(*args, **kwargs)
 
 
 class Comment(db.Model):
