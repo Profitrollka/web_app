@@ -73,10 +73,10 @@ hr {
     padding: 80px 100px 25px;
 }
 
-.tm-post { max-width: 470px; }
+.tm-post { max-width: 600px; }
 
 .tm-row {
-    max-width: 980px;
+    max-width: 1200px;
     justify-content: space-between;
 }
 
@@ -245,7 +245,7 @@ ul {
 	transform: translate3d(0,0,0);
 }
 
-.tm-post { margin-bottom: 75px; }
+.tm-post { margin-bottom: 175px; }
 
 .tm-new-badge {
     top: 25px;
@@ -390,8 +390,11 @@ figcaption { line-height: 1.4; }
 }
 
 .tm-pt-20 { padding-top: 20px; }
+.tm-pt-25 { padding-top: 20px; height: 50px; }
 .tm-pt-30 { padding-top: 30px; }
+.tm-pt-35 { padding-top: 30px; height: 200px; }
 .tm-pt-45 { padding-top: 45px; }
+.tm-pt-50 { height: 220px; }
 .tm-pt-60 { padding-top: 60px; }
 .tm-mb-40 { margin-bottom: 40px; }
 .tm-mb-45 { margin-bottom: 45px; }

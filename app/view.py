@@ -105,7 +105,6 @@ def register():
             try:
                 db.session.add(user)
                 db.session.commit()
-                flash('Congratulations, you are now a registered user!')
                 return redirect('/')
             except:
                 return 'An error occurred when adding a post. Please try again later.'
@@ -117,7 +116,7 @@ def register():
 @app.route('/edit_profile', methods=['POST', 'GET'])
 @login_required
 def edit_profile():
-    form = EditProfileForm(current_user.nickname, current_user.email)
+    form = EditProfileForm(current_user.nickname, current_user.email, current_user.last_name, current_user.first_name)
     img = None
     img_name = None
     if request.method == 'POST':
@@ -125,6 +124,8 @@ def edit_profile():
             current_user.nickname = form.username.data
             current_user.email = form.email.data
             current_user.about_me = form.about_me.data
+            current_user.first_name = form.first_name.data 
+            current_user.last_name = form.last_name.data
             if 'upload' not in request.files:
                 return redirect(request.url)
             file = request.files['upload']
@@ -136,7 +137,6 @@ def edit_profile():
                 current_user.avatar_name = img_name
             try:
                 db.session.commit()
-                flash("Your changes have been saved")
             except:
                 'An error occurred when adding a post. Please try again later.'
             return redirect(url_for('profile', username=current_user.nickname))
@@ -144,6 +144,8 @@ def edit_profile():
         form.username.data = current_user.nickname
         form.email.data = current_user.email
         form.about_me.data = current_user.about_me
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
     return render_template('edit_profile.html', form=form)
 
 
@@ -176,7 +178,6 @@ def post():
             try:
                 db.session.add(post)
                 db.session.commit()
-                flash("Post added")
                 return redirect('/')
             except:
                 return 'An error occurred when adding a post. Please try again later.'

@@ -51,7 +51,7 @@ Registration
             {% endfor %}
         </p>
         <p>
-        <label for="tm-uploadbtn" class="uploadButton">Add file</label>
+        <label for="tm-uploadbtn" class="uploadButton">Add avatar</label>
         <input style="opacity: 0; z-index: -1;" multiple type="file" name="upload" id="tm-uploadbtn"
                onchange='document.querySelector(".uploadButton div").innerHTML = Array.from(this.files).map(f => f.name).join("<br />")' />
         </p>
