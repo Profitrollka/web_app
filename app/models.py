@@ -25,7 +25,10 @@ class User(UserMixin, db.Model):
     avatar_name = db.Column(db.String(140), nullable=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)\
+    # posts = db.relationship('Post', backref='user', lazy=True)
+    # followed = db.relationship('User', secondary='followers', primaryjoin=(followers.c.follower_id==id), secondaryjoin=(followed.c.followed_id==id),
+    #                             backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return "User id: {}, username: {}".format(self.id, self.nickname)
@@ -37,10 +40,9 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password, user_password)
 
 
-post_tags = db.Table('post_tags',
-                     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
-                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-                     )
+followers = db.Table('followers',
+                    db.Column('folower_id', db.Integer, db.ForeignKey('user.id')),
+                    db.Column('folowed_id', db.Integer, db.ForeignKey('user.id')))
 
 
 class Post(db.Model):
@@ -53,10 +55,17 @@ class Post(db.Model):
     img_name = db.Column(db.String(140), nullable=True)
     created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     updated = db.Column(db.DateTime, index=True, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # tags =db.relationship('post_tags', secondary='post', join=(post_tags.c.post_id==id), backref=db.backref('Post', lazy='dynamic'), lazy='dynamic')
 
 
     def __repr__(self):
         return "<{}:{}>".format(self.id, self.title)
+
+
+post_tags = db.Table('post_tags',
+                     db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
+                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
+                     )
 
 
 class Tag(db.Model):
@@ -81,3 +90,5 @@ class Comment(db.Model):
 
     def __repr__(self):
         return "<{}:{}>".format(self.id, self.text[:10])
+
+

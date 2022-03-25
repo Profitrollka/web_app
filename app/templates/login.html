@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Login
+    {{ title }}
 {% endblock %} | Travel blog
 
 {% with messages = get_flashed_messages() %}
@@ -16,7 +16,7 @@ Login
     <h1 class="pt-2 tm-color-primary tm-post-title">Sign In</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <p>
+        <div class='col-xs-6 tm-color-primary'>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     {% for message in messages %}
@@ -24,26 +24,30 @@ Login
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-        </p>
-        <p>
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
             {{ form.username.label }}<br>
             {{ form.username(size=32) }}<br>
             {% for error in form.username.errors %}
             <span style="color:red">{{ error }}</span>
             {% endfor %}
-        </p>
-        <p>
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
             {{ form.password.label }}<br>
             {{ form.password(size=32) }}<br>
             {% for error in form.password.errors  %}
             <span style="color:red">{{ error }}</span>
             {% endfor %}
-        </p>
+        </div>
         <p>{{ form.remember() }} {{ form.remember.label }}</p>
+        
         <div class="text-right">
         <button href="#" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
         </div>
-        <p>New User? <a href="{{ url_for('register') }}" class="tm-color-primary">Click to Register!</a></p>
+
+        <hr>
+
+            <p>New User? <a href="{{ url_for('register') }}" class="tm-color-primary">Click to Register!</a></p>
     </form>
 
 {% endblock %}

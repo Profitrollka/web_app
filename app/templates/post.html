@@ -8,35 +8,34 @@ Add post
     <h1 class="pt-2 tm-color-primary tm-post-title">Add new post</h1>
     <form action="" method="post" novalidate enctype="multipart/form-data">
         {{ form.hidden_tag() }}
-        <p>
+        <div class='col-xs-6 tm-color-primary'>
             {{ form.title.label }}<br>
             {{ form.title(size=100) }}<br>
             {% for error in form.title.errors %}
             <span style="color:red">{{ error }}</span>
             {% endfor %}
-        </p>
-        <p>
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
             {{ form.intro.label }}<br>
             {{ form.intro(rows='3',cols='100') }}<br>
             {% for error in form.intro.errors  %}
             <span style="color:red">{{ error }}</span>
             {% endfor %}
-        </p>
-        <p>
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
             {{ form.text.label }}<br>
             {{ form.text(rows='10',cols='100') }}<br>
             {% for error in form.text.errors  %}
             <span style="color:red">{{ error }}</span>
             {% endfor %}
-        </p>
+        </div>
         <p>
-        <label for="tm-uploadbtn" class="uploadButton">Add file</label>
+        <label for="tm-uploadbtn" class="uploadButton">Add photo</label>
         <input style="opacity: 0; z-index: -1;" multiple type="file" name="upload" id="tm-uploadbtn"
                onchange='document.querySelector(".uploadButton div").innerHTML = Array.from(this.files).map(f => f.name).join("<br />")' />
         </p>
-        <div class="text-right">
-        <button href="#" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
-        </div>
     </form>
-
+<div class="text-right">
+    <button href="#" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+</div>
 {% endblock %}

@@ -1,5 +1,5 @@
 from . import app, db
-from .forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, CommentForm
+from .forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, CommentForm, ProfileForm
 from .models import User, Post, Comment
 from flask import render_template, flash, redirect, url_for, request, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
@@ -71,16 +71,23 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/profile/<username>')
+@app.route('/profile')
 @login_required
-def profile(username):
-    user = User.query.filter_by(nickname=username).first_or_404()
+def profile():
+    form = ProfileForm(current_user.first_name, current_user.last_name, current_user.nickname, current_user.email, current_user.about_me)
+    user = User.query.filter_by(nickname=current_user.nickname).first_or_404()
     posts = Post.query.filter(Post.user_id==user.id).order_by(Post.created.desc())
     comments = [
         {'author': user, 'body': 'Test comment #1'},
         {'author': user, 'body': 'Test comment #2'}
     ]
-    return render_template('profile.html', user=user, posts=posts, comments=comments)
+    form.username.data = current_user.nickname
+    form.email.data = current_user.email
+    form.about_me.data = current_user.about_me
+    form.first_name.data = current_user.first_name
+    form.last_name.data = current_user.last_name
+
+    return render_template('profile.html', user=user, posts=posts, comments=comments, title='Profile', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -109,14 +116,14 @@ def register():
             except:
                 return 'An error occurred when adding a post. Please try again later.'
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Registration', form=form)
 
 
 
 @app.route('/edit_profile', methods=['POST', 'GET'])
 @login_required
 def edit_profile():
-    form = EditProfileForm(current_user.nickname, current_user.email, current_user.last_name, current_user.first_name)
+    form = EditProfileForm(current_user.nickname, current_user.email, current_user.last_name, current_user.first_name, current_user.about_me)
     img = None
     img_name = None
     if request.method == 'POST':
@@ -146,17 +153,17 @@ def edit_profile():
         form.about_me.data = current_user.about_me
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
-    return render_template('edit_profile.html', form=form)
+    return render_template('edit_profile.html', form=form, title='Edit Profile')
 
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html', title='Contact')
 
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', title='About')
 
 
 @app.route('/post', methods=['GET', 'POST'])
@@ -181,7 +188,7 @@ def post():
                 return redirect('/')
             except:
                 return 'An error occurred when adding a post. Please try again later.'
-    return render_template('post.html', title='Post', form=form)
+    return render_template('post.html', title='Add post', form=form)
 
 
 @app.route('/uploads/<filename>')
@@ -207,7 +214,7 @@ def single_post(id):
                     'An error occurred when adding a post. Please try again later.'
     # if comments is None:
     #     return render_template('single_post.html', post=post, posts=posts, form=form)
-    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form)
+    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form, title='Single post')
 
 
 

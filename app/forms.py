@@ -1,27 +1,44 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField, FileField
-from wtforms.validators import DataRequired, ValidationError, EqualTo, Length
+from wtforms.validators import DataRequired, ValidationError, EqualTo, Length, Email
 from email_validator import validate_email, EmailNotValidError
 from .models import User
 
 
 class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
     remember = BooleanField("Remember Me")
     submit = SubmitField('Sign in')
 
 
+class ProfileForm(FlaskForm):
+    first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
+    last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    about_me = PasswordField("About me", validators=[DataRequired(), Length(min=6, max=200)])
+
+    def __init__(self, original_first_name, original_last_name, original_username, original_email, original_about_me, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.original_username = original_username
+        self.original_email = original_email
+        self.original_first_name = original_first_name
+        self.original_last_name = original_last_name
+        self.original_about_me = original_about_me
+
+
 class RegistrationForm(FlaskForm):
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-    first_name = StringField("First name", validators=[DataRequired()])
-    last_name = StringField("Last name", validators=[DataRequired()])
-    username = StringField("Username", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
+    first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
+    last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
+    username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField("Email", validators=[DataRequired(), Email()])
+    about_me = TextAreaField("About me", validators=[Length(min=0, max=140)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    file = FileField("Files")
+        'Repeat Password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
+    file = FileField("Add avatar")
     submit = SubmitField('Submit')
 
     def validate_username(self, username):
@@ -45,23 +62,25 @@ class RegistrationForm(FlaskForm):
 
 class EditProfileForm(FlaskForm):
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-    username = StringField("Username", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
+    email = StringField("Email", validators=[DataRequired(), Email()])
     about_me = TextAreaField("About me", validators=[Length(min=0, max=140)])
-    first_name = StringField("First name", validators=[DataRequired()])
-    last_name = StringField("Last name", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
+    last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
 
-    file = FileField("Files")
+    file = FileField("Add avatar")
     submit = SubmitField('Submit')
 
-    def __init__(self, original_username, original_email, original_first_name, original_last_name, *args, **kwargs):
+    def __init__(self, original_username, original_email, original_first_name, original_last_name, original_about_me, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         self.original_username = original_username
         self.original_email = original_email
         self.original_first_name = original_first_name
         self.original_last_name = original_last_name
+        self.original_about_me = original_about_me
+
 
     def validate_username(self, username):
         if username.data != self.original_username:
@@ -87,8 +106,8 @@ class PostForm(FlaskForm):
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     title = StringField("Title", validators=[DataRequired(), Length(min=0, max=140)])
     intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
-    text = TextAreaField("Text", validators=[DataRequired()])
-    file = FileField("Files")
+    text = TextAreaField("Text", validators=[DataRequired(), Length(min=2, max=3000)])
+    file = FileField("Add photos")
     submit = SubmitField('Add post')
 
     def __init__(self, user_id, *args, **kwargs):

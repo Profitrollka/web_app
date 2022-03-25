@@ -392,7 +392,7 @@ figcaption { line-height: 1.4; }
 .tm-pt-20 { padding-top: 20px; }
 .tm-pt-25 { padding-top: 20px; height: 50px; }
 .tm-pt-30 { padding-top: 30px; }
-.tm-pt-35 { padding-top: 30px; height: 200px; }
+.tm-pt-35 { padding-top: 30px; height: 250px; }
 .tm-pt-45 { padding-top: 45px; }
 .tm-pt-50 { height: 220px; }
 .tm-pt-60 { padding-top: 60px; }
@@ -601,10 +601,6 @@ margin: 7px 0 7px 7px; /* Отступы вокруг картинки */
     }
 }
 
-@media (max-width: 709px) {
-    .tm-person-col { width: 100%; }
-}
-
 @media (max-width: 991px) and (min-width: 826px) {
     .tm-about-col {
         flex: 0 0 33.3333%;
@@ -629,13 +625,4 @@ margin: 7px 0 7px 7px; /* Отступы вокруг картинки */
     .tm-contact-form textarea {
         max-width: 100%;
     }
-}
-
-@media (max-width: 480px) {
-    .tm-person-col { width: 100%; }
-    .tm-person { flex-direction: row; }
-}
-
-@media (max-width: 380px) {
-    .tm-person img { max-width: 120px; }
 }

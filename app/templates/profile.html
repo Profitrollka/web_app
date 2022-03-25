@@ -1,93 +1,72 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Profile
+  {{ title }}
 {% endblock %} | Travel blog
 
 {% block content %}
 <hr>
-<div class="container bootstrap snippet">
-    <div class="row">
-        <div class="col-sm-3"><!--left col-->
-              
-      <div class="text-center">
-        <img src="{{ url_for('uploaded_file', filename=user.avatar_name) }}" width="200" height="200"/>
-      </div></hr><br>
-          
-          
-          <ul class="list-group tm-color-primary">
-            <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 0</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 0</li>
-            <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 0</li>
-          </ul> 
-          
-        </div><!--/col-3-->
-        <div class="col-sm-9">
-          <div class="tab-content">
-            <div class="tab-pane active" id="home">
-                <hr>
-                  <form class="form" action="##" method="post" id="registrationForm">
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6 tm-color-primary">
-                              <label for="first_name"><h4>First name</h4></label>
-                              <input type="text" class="form-control" name="first_name" id="first_name" placeholder={{ user.first_name }} title="enter your first name if any.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6 tm-color-primary">
-                            <label for="last_name"><h4>Last name</h4></label>
-                              <input type="text" class="form-control" name="last_name" id="last_name" placeholder={{ user.last_name }} title="enter your last name if any.">
-                          </div>
-                      </div>
-          
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6 tm-color-primary">
-                              <label for="phone"><h4>About me</h4></label>
-                              <input type="text" class="form-control" name="info" id="info" title="enter information about youself">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6 tm-color-primary">
-                              <label for="email"><h4>Email</h4></label>
-                              <input type="email" class="form-control" name="info" id="info" placeholder={{ user.email }} title="enter your email.">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                          
-                          <div class="col-xs-6 tm-color-primary">
-                              <label for="email"><h4>Nickname</h4></label>
-                              <input type="email" class="form-control" id="nickname" placeholder={{ user.nickname }} title="enter a nickname">
-                          </div>
-                      </div>
-                </form>
-              
-              <hr>
-              
-             </div><!--/tab-pane-->
-             <div class="tab-pane" id="messages">
-                    
-              </div>
-              {% if user == current_user %}
-                <p><a href="{{ url_for('edit_profile') }}" class="tm-color-primary"> Edit profile</a></p>
-                </div>
-              {% endif %}
-              <h4 class="tm-color-primary">Posts:</h4>
-                {% for post in posts %}
-                    <div class="tm-post-link-inner">
-                        <p><a href="{{ url_for('single_post', id=post.id) }}" style="color:#999;"> {{ post.title }}</a></p>
-                {% endfor %}
-                </div>
-                <hr>
-                <div class="tm-post-link-inner">
-              </div><!--/tab-pane-->
-          </div><!--/tab-content-->
+<div class="row">
+  <div class="col-sm-3"><!--left col-->
+    <div class="text-center">
+      <img src="{{ url_for('uploaded_file', filename=user.avatar_name) }}" width="200" height="200"/>
+    </div></hr><br>
+    <ul class="list-group tm-color-primary">
+      <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
+      <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 0</li>
+      <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 0</li>
+      <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 0</li>
+    </ul> 
+  </div><!--/col-sm-3-->
+  <div class="col-sm-9">
+    <div class="tab-content">
+      <div class="tab-pane active" id="home">
+        <form action="" method="post" novalidate enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class='col-xs-6 tm-color-primary'>
+          {{ form.first_name.label }}<br>
+          {{ form.first_name(size=78) }}<br>
+              {% for error in form.first_name.errors %}
+              <span style="color:red">{{ error }}</span>
+              {% endfor %}
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
+          {{ form.last_name.label }}<br>
+          {{ form.last_name(size=78) }}<br>
+              {% for error in form.last_name.errors %}
+              <span style="color:red">{{ error }}</span>
+              {% endfor %}
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
+          {{ form.username.label }}<br>
+          {{ form.username(size=78) }}<br>
+              {% for error in form.username.errors %}
+              <span style="color:red">{{ error }}</span>
+              {% endfor %}
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
+          {{ form.email.label }}<br>
+          {{ form.email(size=78) }}<br>
+              {% for error in form.email.errors %}
+              <span style="color:red">{{ error }}</span>
+              {% endfor %}
+        </div>
+        <div class='col-xs-6 tm-color-primary'>
+          {{ form.about_me.label }}<br>
+          {{ form.about_me(size=78) }}<br>
+              {% for error in form.about_me.errors  %}
+              <span style="color:red">{{ error }}</span>
+              {% endfor %}
+        </div>
+        </form>
 
-        </div><!--/col-9-->
-    </div><!--/row-->
+        {% if user == current_user %}
+        <p><a href="{{ url_for('edit_profile') }}" class="tm-color-primary"> Edit profile</a></p>
+        {% endif %}
+
+      </div><!--/tab-pane-->
+    </div>
+  </div><!--/col-9-->
+</div><!--/row-->
 
 {% endblock %}
