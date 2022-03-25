@@ -20,10 +20,12 @@ def get_username_avatar_by_user_key(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     return user.avatar_name
 
+
 @app.template_filter('get_date')
 def get_date_by_datetime(datetime):
     date = str(datetime)[:10]
     return date
+
 
 @app.template_filter('get_comments_count')
 def get_comments_count(post_id):
@@ -59,6 +61,7 @@ def login():
             next_page = request.args.get('next')
             if not next_page or url_parse(next_page).netloc != '':
                 next_page = url_for('index')
+            flash(f'User {form.username.data} is authenticated!', 'success')
             return redirect(next_page)
         flash("Invalid username or password", 'error')
         return redirect(url_for('login', next=request.endpoint))
@@ -71,34 +74,15 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/profile')
-@login_required
-def profile():
-    form = ProfileForm(current_user.first_name, current_user.last_name, current_user.nickname, current_user.email, current_user.about_me)
-    user = User.query.filter_by(nickname=current_user.nickname).first_or_404()
-    posts = Post.query.filter(Post.user_id==user.id).order_by(Post.created.desc())
-    comments = [
-        {'author': user, 'body': 'Test comment #1'},
-        {'author': user, 'body': 'Test comment #2'}
-    ]
-    form.username.data = current_user.nickname
-    form.email.data = current_user.email
-    form.about_me.data = current_user.about_me
-    form.first_name.data = current_user.first_name
-    form.last_name.data = current_user.last_name
-
-    return render_template('profile.html', user=user, posts=posts, comments=comments, title='Profile', form=form)
-
-
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     img = None
     img_name = None
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
+    if form.validate_on_submit():
+        if request.method == 'POST':
             if 'upload' not in request.files:
                 return redirect(request.url)
             file = request.files['upload']
@@ -112,12 +96,32 @@ def register():
             try:
                 db.session.add(user)
                 db.session.commit()
+                flash(f'Account created for {form.username.data}!', 'success')
                 return redirect('/')
             except:
-                return 'An error occurred when adding a post. Please try again later.'
-        return redirect(url_for('login'))
+                return 'An error occurred when saving data. Please try again later.'
+        else:
+            flash('Form contains errors', 'error')
+        return redirect(url_for('register'))
     return render_template('register.html', title='Registration', form=form)
 
+
+@app.route('/profile')
+@login_required
+def profile():
+    form = ProfileForm(current_user.first_name, current_user.last_name, current_user.nickname, current_user.email, current_user.about_me)
+    form.username.data = current_user.nickname
+    form.email.data = current_user.email
+    form.about_me.data = current_user.about_me
+    form.first_name.data = current_user.first_name
+    form.last_name.data = current_user.last_name
+    user = User.query.filter_by(nickname=current_user.nickname).first_or_404()
+    posts = Post.query.filter(Post.user_id==user.id).order_by(Post.created.desc())
+    comments = [
+        {'author': user, 'body': 'Test comment #1'},
+        {'author': user, 'body': 'Test comment #2'}
+    ]
+    return render_template('profile.html', user=user, posts=posts, comments=comments, title='Profile', form=form)
 
 
 @app.route('/edit_profile', methods=['POST', 'GET'])
@@ -191,11 +195,6 @@ def post():
     return render_template('post.html', title='Add post', form=form)
 
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-
 @app.route('/post/<int:id>', methods=['GET', 'POST'])
 def single_post(id):
     user = current_user
@@ -214,7 +213,13 @@ def single_post(id):
                     'An error occurred when adding a post. Please try again later.'
     # if comments is None:
     #     return render_template('single_post.html', post=post, posts=posts, form=form)
-    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form, title='Single post')
+    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form, title='Single post')    
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 
 

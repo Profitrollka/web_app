@@ -7,25 +7,9 @@ from .models import User
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
+    password = PasswordField("Password", validators=[DataRequired()])
     remember = BooleanField("Remember Me")
-    submit = SubmitField('Sign in')
-
-
-class ProfileForm(FlaskForm):
-    first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
-    last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
-    username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField("Email", validators=[DataRequired(), Email()])
-    about_me = PasswordField("About me", validators=[DataRequired(), Length(min=6, max=200)])
-
-    def __init__(self, original_first_name, original_last_name, original_username, original_email, original_about_me, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
-        self.original_username = original_username
-        self.original_email = original_email
-        self.original_first_name = original_first_name
-        self.original_last_name = original_last_name
-        self.original_about_me = original_about_me
+    submit = SubmitField('Login')
 
 
 class RegistrationForm(FlaskForm):
@@ -36,15 +20,34 @@ class RegistrationForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(), Email()])
     about_me = TextAreaField("About me", validators=[Length(min=0, max=140)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
     file = FileField("Add avatar")
-    submit = SubmitField('Submit')
+    submit = SubmitField('Sign Up')
+
 
     def validate_username(self, username):
+        excluded_chars = "*?!^+%&/()=][}{#$"
+        for char in self.username.data:
+            if char in excluded_chars:
+                raise ValidationError(f"Character {char} is not allowed in username.")
         user = User.query.filter_by(nickname=self.username.data).first()
         if user is not None:
             raise ValidationError('Username is already exists, please use different username')
+
+
+    def validate_first_name(self, first_name):
+        excluded_chars = "*?!^+%&/()=][}{#$"
+        for char in self.first_name.data:
+            if char in excluded_chars:
+                raise ValidationError(f"Character {char} is not allowed in first name.")
+
+
+    def validate_last_name(self, last_name):
+        excluded_chars = "*?!^+%&/()=][}{#$"
+        for char in self.last_name.data:
+            if char in excluded_chars:
+                raise ValidationError(f"Character {char} is not allowed in first name.")
+
 
     def validate_email(self, email):
         user = User.query.filter_by(email=self.email.data).first()
@@ -60,6 +63,22 @@ class RegistrationForm(FlaskForm):
                filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
 
+class ProfileForm(FlaskForm):
+    first_name = StringField("First name")
+    last_name = StringField("Last name")
+    username = StringField("Username")
+    email = StringField("Email")
+    about_me = PasswordField("About me")
+
+    def __init__(self, original_first_name, original_last_name, original_username, original_email, original_about_me, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.original_username = original_username
+        self.original_email = original_email
+        self.original_first_name = original_first_name
+        self.original_last_name = original_last_name
+        self.original_about_me = original_about_me
+
+
 class EditProfileForm(FlaskForm):
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
@@ -68,8 +87,7 @@ class EditProfileForm(FlaskForm):
     first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
     last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
-
+    confirm_password = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
     file = FileField("Add avatar")
     submit = SubmitField('Submit')
 
