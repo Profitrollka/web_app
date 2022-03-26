@@ -17,25 +17,23 @@ body {
 p, span { color: #999; }
 hr { 
     border-top-color: #CCC; 
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 .form-control::-webkit-input-placeholder { color: #999; }  
 .form-control:-ms-input-placeholder { color: #999; }  
 .form-control::placeholder { color: #999; }
-.form-control:-sm-input-placeholder { color: #cfb6d7; }
 
 
 .tm-header {
     background-color: #cfb6d7;
     color: white;
-    
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     z-index: 100;
-    width: 400px;
+    width: 360px;
     overflow-y: visible;     
 }
 
@@ -43,7 +41,7 @@ hr {
     overflow-y: scroll;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding: 30px;
+    padding: 40px;
     width: 100%;
     height: 100%; 
 }
@@ -71,14 +69,14 @@ hr {
 .tm-site-logo i { color: #cfb6d7; }
 
 .tm-main {
-    margin-left: 400px;
-    padding: 80px 100px 25px;
+    margin-left: 300px;
+    padding: 5px 90px 20px;
 }
 
-.tm-post { max-width: 600px; }
+.tm-post { max-width: 700px; }
 
 .tm-row {
-    max-width: 1200px;
+    max-width: 1400px;
     justify-content: space-between;
 }
 
@@ -194,9 +192,11 @@ ul {
     border-radius: 10px;
     cursor: pointer;
 }
+
 .uploadButton:hover {
     background: #cfb6d7;
 }
+
 .uploadButton div{
   color: #999;
 }
@@ -212,6 +212,7 @@ ul {
     display: block;
     position: relative;
 	cursor: pointer;
+    color: #af85bc;
 }
 
 .tm-post-link-inner {
@@ -247,7 +248,7 @@ ul {
 	transform: translate3d(0,0,0);
 }
 
-.tm-post { margin-bottom: 175px; }
+.tm-post { margin-bottom: 50px; }
 
 .tm-new-badge {
     top: 25px;
@@ -258,7 +259,7 @@ ul {
 }
 
 .tm-post-title {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     transition: all 0.3s ease;
 }
 
@@ -383,7 +384,7 @@ video {
 figure { margin: 0; }
 figcaption { line-height: 1.4; }
 
-.tm-post-full { max-width: 600px; }
+.tm-post-full { max-width: 700px; }
 
 .tm-post-sidebar {
     max-width: 280px;
@@ -408,7 +409,7 @@ figcaption { line-height: 1.4; }
 .tm-mb-120 { margin-bottom: 120px; }
 .tm-mt-40 { margin-top: 40px; }
 .tm-mt-100 { margin-top: 100px; }
-.tm-mr-20 { margin-right: 20px; }
+.tm-mr-20 { margin-right: 10px; }
 .tm-color-primary, span.tm-color-primary { color: #af85bc; }
 a.tm-color-gray, .tm-color-gray { color: #999; }
 a.tm-color-gray:hover { color: #af85bc; }

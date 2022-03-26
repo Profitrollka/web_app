@@ -22,28 +22,27 @@
         <h1 class="pt-2 tm-color-primary tm-post-title">User Profile</h1>
         <form action="" method="post" novalidate enctype="multipart/form-data">
         {{ form.csrf_token() }}
-        <div class='col-xs-6 tm-color-gray'>
-          {{ form.first_name.label }}<br>
-          {{ form.first_name(size=78) }}<br>
+        <div class='form-group tm-color-gray'>
+          {{ form.first_name.label(class="form-contol-label") }}
+          {{ form.first_name(class="form-control form-control-lg") }}
         </div>
-        <div class='col-xs-6 tm-color-gray'>
-          {{ form.last_name.label }}<br>
-          {{ form.last_name(size=78) }}<br>
+        <div class='form-group tm-color-gray'>
+          {{ form.last_name.label(class="form-contol-label") }}
+          {{ form.last_name(class="form-control form-control-lg") }}
         </div>
-        <div class='col-xs-6 tm-color-gray'>
-          {{ form.username.label }}<br>
-          {{ form.username(size=78) }}<br>
+        <div class='form-group tm-color-gray'>
+          {{ form.username.label(class="form-contol-label") }}
+          {{ form.username(class="form-control form-control-lg") }}
         </div>
-        <div class='col-xs-6 tm-color-gray'>
-          {{ form.email.label }}<br>
-          {{ form.email(size=78) }}<br>
+        <div class='form-group tm-color-gray'>
+          {{ form.email.label(class="form-contol-label") }}
+          {{ form.email(class="form-control form-control-lg") }}
         </div>
-        <div class='col-xs-6 tm-color-gray'>
-          {{ form.about_me.label }}<br>
-          {{ form.about_me(size=78) }}<br>
+        <div class='form-group tm-color-gray'>
+          {{ form.about_me.label(class="form-contol-label") }}
+          {{ form.about_me(class="form-control form-control-lg") }}
         </div>
         </form>
-
         {% if user == current_user %}
           <p><a href="{{ url_for('edit_profile') }}" class="tm-color-primary"> Edit profile</a></p>
         {% endif %}
