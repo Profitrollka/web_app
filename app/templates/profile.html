@@ -3,49 +3,101 @@
   {{ title }}
 {% endblock %} | Travel blog
 {% block content %}
-<hr>
 <div class="row">
-  <div class="col-sm-3"><!--left col-->
-    <div class="text-center">
-      <img src="{{ url_for('uploaded_file', filename=user.avatar_name) }}" width="200" height="200"/>
+  <div class="col-sm-4 tm-color-primary"><!--left col-->
+    <div class="text-center tm-post-link-inner tm-pt-50">
+      <img src={{ avatar_path }} width="200" height="200"/>
     </div></hr><br>
     <ul class="list-group tm-color-primary">
-      <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
+      <li class="list-group-item text-muted ">Activity <i class="fa fa-dashboard fa-1x "></i></li>
       <li class="list-group-item text-right"><span class="pull-left"><strong>Likes</strong></span> 0</li>
-      <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> 0</li>
+      <li class="list-group-item text-right"><span class="pull-left"><strong>Comment</strong></span> 0</li>
       <li class="list-group-item text-right"><span class="pull-left"><strong>Followers</strong></span> 0</li>
     </ul> 
   </div><!--/col-sm-3-->
-  <div class="col-sm-9">
+  <div class="col-sm-8">
     <div class="tab-content">
       <div class="tab-pane active" id="home">
-        <h1 class="pt-2 tm-color-primary tm-post-title">User Profile</h1>
-        <form action="" method="post" novalidate enctype="multipart/form-data">
-        {{ form.csrf_token() }}
-        <div class='form-group tm-color-gray'>
-          {{ form.first_name.label(class="form-contol-label") }}
-          {{ form.first_name(class="form-control form-control-lg") }}
+        <form action="" method="post" action="" novalidate enctype="multipart/form-data">
+            {{ form.csrf_token() }}
+          <div class="form-group tm-color-gray">
+            {{ form.first_name.label }}
+            {% if form.first_name.errors %}
+                 {{ form.first_name(class="form-control form-control-lg is-invalid") }}
+                 <div class="invalid-feedback">
+                    {% for error in form.first_name.errors %}
+                        <span style="color:red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.first_name(class="form-control form-control-lg") }}
+            {% endif %} 
+         </div>
+         <div class="form-group tm-color-gray">
+            {{ form.last_name.label }}
+            {% if form.last_name.errors %}
+                 {{ form.last_name(class="form-control form-control-lg is-invalid") }}
+                 <div class="invalid-feedback">
+                    {% for error in form.last_name.errors %}
+                        <span style="color:red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.last_name(class="form-control form-control-lg") }}
+            {% endif %}
+         </div>
+         <div class="form-group tm-color-gray">
+            {{ form.username.label }}
+            {% if form.username.errors %}
+                 {{ form.username(class="form-control form-control-lg is-invalid") }}
+                 <div class="invalid-feedback">
+                    {% for error in form.username.errors %}
+                        <span style="color:red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.username(class="form-control form-control-lg") }}
+            {% endif %}
+         </div>
+         <div class="form-group tm-color-gray">
+            {{ form.email.label }}
+            {% if form.email.errors %}
+                 {{ form.email(class="form-control form-control-lg is-invalid") }}
+                 <div class="invalid-feedback">
+                    {% for error in form.email.errors %}
+                        <span style="color:red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.email(class="form-control form-control-lg") }}
+            {% endif %}
+         </div>
+         <div class="form-group tm-color-gray">
+            {{ form.about_me.label }}
+            {% if form.about_me.errors %}
+                 {{ form.about_me(class="form-control form-control-lg is-invalid") }}
+                 <div class="invalid-feedback">
+                    {% for error in form.about_me.errors %}
+                        <span style="color:red">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {{ form.about_me(class="form-control form-control-lg") }}
+            {% endif %}
         </div>
-        <div class='form-group tm-color-gray'>
-          {{ form.last_name.label(class="form-contol-label") }}
-          {{ form.last_name(class="form-control form-control-lg") }}
-        </div>
-        <div class='form-group tm-color-gray'>
-          {{ form.username.label(class="form-contol-label") }}
-          {{ form.username(class="form-control form-control-lg") }}
-        </div>
-        <div class='form-group tm-color-gray'>
-          {{ form.email.label(class="form-contol-label") }}
-          {{ form.email(class="form-control form-control-lg") }}
-        </div>
-        <div class='form-group tm-color-gray'>
-          {{ form.about_me.label(class="form-contol-label") }}
-          {{ form.about_me(class="form-control form-control-lg") }}
-        </div>
+        <div class="form-group tm-color-gray">
+           {{ form.file.label() }}<br>
+           {{ form.file(class="form-control-file") }}
+           {% if form.file.errors %}
+               {% for error in form.file.errors %}
+                   <span style="color:red">{{ error }}</span><br>
+               {% endfor %}
+           {% endif %}
+        </div><br> 
+         <div class="form-group">
+            {{ form.submit(class="tm-btn tm-btn-primary tm-btn-small") }}
+         </div>
         </form>
-        {% if user == current_user %}
-          <p><a href="{{ url_for('edit_profile') }}" class="tm-color-primary"> Edit profile</a></p>
-        {% endif %}
       </div><!--/tab-pane-->
     </div>
   </div><!--/col-9-->

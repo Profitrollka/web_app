@@ -1,8 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField, FileField
+from flask_wtf.file import FileField, FileAllowed
+from flask_login import current_user
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, Length, Email
 from email_validator import validate_email, EmailNotValidError
 from .models import User
+from . import app
 
 
 class LoginForm(FlaskForm):
@@ -13,7 +16,6 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
     last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
     username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
@@ -21,7 +23,7 @@ class RegistrationForm(FlaskForm):
     about_me = TextAreaField("About me", validators=[Length(min=0, max=140)])
     password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
-    file = FileField("Add avatar")
+    file = FileField("Avatar", validators=[FileAllowed(app.config['ALLOWED_EXTENSIONS'])])
     submit = SubmitField('Sign Up')
 
 
@@ -30,9 +32,9 @@ class RegistrationForm(FlaskForm):
         for char in self.username.data:
             if char in excluded_chars:
                 raise ValidationError(f"Character {char} is not allowed in username.")
-        user = User.query.filter_by(nickname=self.username.data).first()
-        if user is not None:
-            raise ValidationError('Username is already exists, please use different username')
+        user = User.query.filter_by(nickname=username.data).first()
+        if user:
+            raise ValidationError('That username is taken. Please choose a different one.')
 
 
     def validate_first_name(self, first_name):
@@ -50,91 +52,72 @@ class RegistrationForm(FlaskForm):
 
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=self.email.data).first()
-        if user is not None:
-            raise ValidationError('Email address is already exist')
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError('That email is taken. Please choose a different one.')
         try:
             validate_email(email.data)
         except EmailNotValidError:
             raise ValidationError('Email address is not valid')
 
-    def allowed_file(self, filename):
-        return '.' in filename and \
-               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
 
-class ProfileForm(FlaskForm):
-    first_name = StringField("First name")
-    last_name = StringField("Last name")
-    username = StringField("Username")
-    email = StringField("Email")
-    about_me = PasswordField("About me")
-
-    def __init__(self, original_first_name, original_last_name, original_username, original_email, original_about_me, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
-        self.original_username = original_username
-        self.original_email = original_email
-        self.original_first_name = original_first_name
-        self.original_last_name = original_last_name
-        self.original_about_me = original_about_me
-
-
-class EditProfileForm(FlaskForm):
-    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+class UpdateProfileForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField("Email", validators=[DataRequired(), Email()])
     about_me = TextAreaField("About me", validators=[Length(min=0, max=140)])
     first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
     last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=30)])
-    confirm_password = PasswordField('Confirm password', validators=[DataRequired(), EqualTo('password'), Length(min=6, max=30)])
-    file = FileField("Add avatar")
-    submit = SubmitField('Submit')
-
-    def __init__(self, original_username, original_email, original_first_name, original_last_name, original_about_me, *args, **kwargs):
-        super(EditProfileForm, self).__init__(*args, **kwargs)
-        self.original_username = original_username
-        self.original_email = original_email
-        self.original_first_name = original_first_name
-        self.original_last_name = original_last_name
-        self.original_about_me = original_about_me
-
+    file = FileField("Update Profile Picture", validators=[FileAllowed(app.config['ALLOWED_EXTENSIONS'])])
+    submit = SubmitField('Update')
 
     def validate_username(self, username):
-        if username.data != self.original_username:
-            user = User.query.filter_by(nickname=self.username.data).first()
-            if user is not None:
-                raise ValidationError('Username is already exists, please use different username')
+        if current_user.nickname != username.data:
+            try:
+                user = User.query.filter_by(nickname=username.data).first()
+                if user:
+                    raise ValidationError('That username is taken. Please choose a different one.')
+            except:
+                pass
+
+    def validate_first_name(self, first_name):
+        if current_user.first_name != first_name.data:
+            excluded_chars = "*?!^+%&/()=][}{#$"
+            for char in first_name.data:
+                if char in excluded_chars:
+                    raise ValidationError(f"Character {char} is not allowed in first name.")
+
+
+    def validate_last_name(self, last_name):
+        if current_user.last_name != last_name.data:
+            excluded_chars = "*?!^+%&/()=][}{#$"
+            for char in last_name.data:
+                if char in excluded_chars:
+                    raise ValidationError(f"Character {char} is not allowed in first name.")
+
 
     def validate_email(self, email):
-        if email.data != self.original_email:
-            user = User.query.filter_by(email=self.email.data).first()
-            if user is not None:
-                raise ValidationError('Email address is already exist')
+        if current_user.email != email.data:
             try:
-                validate_email()
+                user = User.query.filter_by(email=email.data).first()
+                if user:
+                    raise ValidationError('That email is taken. Please choose a different one.')
+                validate_email(email.data)    
             except EmailNotValidError:
                 raise ValidationError('Email address is not valid')
 
-    def allowed_file(self, filename):
-        return '.' in filename and \
-               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
 class PostForm(FlaskForm):
-    ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-    title = StringField("Title", validators=[DataRequired(), Length(min=0, max=140)])
+    title = StringField("Title", validators=[DataRequired(), Length(min=0, max=10)])
     intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
     text = TextAreaField("Text", validators=[DataRequired(), Length(min=2, max=3000)])
-    file = FileField("Add photos")
+    file = FileField("Add photos", validators=[FileAllowed(app.config['ALLOWED_EXTENSIONS'])])
     submit = SubmitField('Add post')
 
     def __init__(self, user_id, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
         self.user_id = user_id
 
-    def allowed_file(self, filename):
-        return '.' in filename and \
-               filename.rsplit('.', 1)[1].lower() in self.ALLOWED_EXTENSIONS
 
 
 class CommentForm(FlaskForm):

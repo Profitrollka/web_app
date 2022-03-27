@@ -14,6 +14,7 @@ psycopg2 = "*"
 werkzeug = "*"
 wtforms = "*"
 alembic = "*"
+flask-alembic = "*"
 
 [dev-packages]
 

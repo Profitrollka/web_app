@@ -4,10 +4,10 @@ Add post
 {% endblock %} | Travel blog
 {% block content %}
     <h1 class="pt-2 tm-color-primary tm-post-title">Add new post</h1>
-    <form action="" method="post" novalidate enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class='col-xs-6 tm-color-primary'>
-            {{ form.title.label }}<br>
+    <form action="" method="post" action="" novalidate enctype="multipart/form-data">
+        {{ form.csrf_token() }}
+        <div class='form-group tm-color-gray'>
+            {{ form.title.label }}
             {% if form.title.errors %}
                  {{ form.title(class="form-control form-control-lg is-invalid") }}
                  <div class="invalid-feedback">
@@ -19,8 +19,8 @@ Add post
                 {{ form.title(class="form-control form-control-lg") }}
             {% endif %} 
         </div>
-        <div class='col-xs-6 tm-color-primary'>
-            {{ form.intro.label }}<br>
+        <div class='form-group tm-color-gray'>
+            {{ form.intro.label }}
             {% if form.intro.errors %}
                  {{ form.intro(class="form-control form-control-lg is-invalid") }}
                  <div class="invalid-feedback">
@@ -32,8 +32,8 @@ Add post
                 {{ form.intro(class="form-control form-control-lg") }}
             {% endif %} 
         </div>
-        <div class='col-xs-6 tm-color-primary'>
-            {{ form.text.label }}<br>
+        <div class='form-group tm-color-gray'>
+            {{ form.text.label }}
             {% if form.text.errors %}
                  {{ form.text(class="form-control form-control-lg is-invalid") }}
                  <div class="invalid-feedback">
@@ -45,13 +45,17 @@ Add post
                 {{ form.text(class="form-control form-control-lg") }}
             {% endif %} 
         </div>
-        <p>
-        <label for="tm-uploadbtn" class="uploadButton">Add photo</label>
-        <input style="opacity: 0; z-index: -1;" multiple type="file" name="upload" id="tm-uploadbtn"
-               onchange='document.querySelector(".uploadButton div").innerHTML = Array.from(this.files).map(f => f.name).join("<br />")' />
-        </p>
+        <div class="form-group tm-color-gray">
+           {{ form.file.label() }}<br>
+           {{ form.file(class="form-control-file") }}
+           {% if form.file.errors %}
+               {% for error in form.file.errors %}
+                   <span style="color:red">{{ error }}</span><br>
+               {% endfor %}
+           {% endif %}
+        </div><br> 
+         <div class="form-group">
+            {{ form.submit(class="tm-btn tm-btn-primary tm-btn-small") }}
+         </div>
     </form>
-<div class="text-right">
-    <button href="#" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
-</div>
 {% endblock %}
