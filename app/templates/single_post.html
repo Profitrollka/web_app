@@ -10,7 +10,7 @@
         <hr class="tm-hr-primary tm-mb-55">
         <a href="{{ url_for('uploaded_file', filename=post.img_name) }}" class="effect-lily tm-post-link tm-pt-60">
             <div class="tm-post-link-inner">
-                <img src="{{ url_for('uploaded_file', filename=post.img_name) }}"/>
+                <img src="{{ post.img_path }}"/>
             </div>
             <span class="position-absolute tm-new-badge">New</span>
             <h2 class="tm-pt-30 tm-color-primary tm-post-title">{{ post.title }}</h2>
@@ -29,26 +29,32 @@
             <!-- Comments -->
             <h2 class="tm-color-primary tm-post-title">Comments</h2>
             {% for comment in comments %}
-            <p><img src="{{ url_for('uploaded_file', filename=comment.user_id|get_avatar) }}" width="100" height="100" class="leftimg"/>
+            <p><img src="{{ comment.user_id|get_avatar }}" width="100" height="100" class="leftimg"/>
                 <p class="tm-color-primary">{{ comment.user_id|get_nickname }}</p>
                 <p class="tm-color-gray"> {{ comment.text }}</p>
             {% endfor %}
-            <h1 class="pt-2 tm-color-primary tm-post-title">Your comment</h1>
             <form action="" method="post" novalidate enctype="multipart/form-data">
-                {{ form.hidden_tag() }}
-            <p>
-                {{ form.text(rows='2',cols='68') }}<br>
-                {% for error in form.text.errors %}
-                <span style="color:red">{{ error }}</span>
-                {% endfor %}
-            </p>
-                <div class="text-right">
-                    <button href="#" class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
-                </div>
+                {{ form.csrf_token() }}
+             <div class="form-group tm-color-gray">
+                {{ form.text.label }}
+                {% if form.text.errors %}
+                     {{ form.text(class="form-control form-control-lg is-invalid") }}
+                     <div class="invalid-feedback">
+                        {% for error in form.text.errors %}
+                            <span style="color:red">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.text(class="form-control form-control-lg") }}</br>
+                {% endif %}
+            </div>
+             <div class="form-group">
+                {{ form.submit(class="tm-btn tm-btn-primary tm-btn-small") }}
+             </div>
             </form>
         </div>
     </div>
-    <aside class="col-lg-4 tm-aside-col">
+<aside class="col-lg-4 tm-aside-col">
     <div class="tm-post-sidebar">
         <hr class="mb-3 tm-hr-primary">
         <h2 class="mb-4 tm-post-title tm-color-primary">Categories</h2>
@@ -58,16 +64,16 @@
         </ul><!---->
         <hr class="mb-3 tm-hr-primary">
         <h2 class="tm-mb-40 tm-post-title tm-color-primary">Related Posts</h2>
-            {% for post in posts%}
-            <figure href="{{ url_for('uploaded_file', filename=post.img_name) }}" class="effect-lily tm-post-link tm-pt-60">
-                <div class="tm-post-link-inner">
-                <p><img src="{{ url_for('uploaded_file', filename=post.img_name) }}"/></p>
-                <a href="{{ url_for('single_post', id=post.id) }}" class="tm-color-primary">{{ post.title }}</a>
-                </div>
-            </figure>
-            <figure>
-                <p class="tm-post-col">{{ post.intro }}</p>
-            </figure>
+        {% for post in posts %}
+        <figure href="{{ post.img_name }}" class="effect-lily tm-post-link tm-pt-60">
+            <div class="tm-post-link-inner">
+            <p><img src="{{ post.img_path }}"/></p>
+            <a href="{{ post.id }}" class="tm-color-primary">{{ post.title }}</a>
+            </div>
+        </figure>
+        <figure>
+            <p class="tm-post-col">{{ post.intro }}</p>
+        </figure>
         {% endfor %}
     </div>
 </aside>

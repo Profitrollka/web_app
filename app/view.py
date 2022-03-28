@@ -1,5 +1,6 @@
 import os
 import secrets
+from PIL import Image
 from datetime import datetime
 from flask import abort, render_template, flash, redirect, url_for, request, send_from_directory, jsonify, make_response
 from flask_login import current_user, login_user, logout_user, login_required
@@ -19,7 +20,8 @@ def get_username_name_by_user_key(user_id):
 @app.template_filter('get_avatar')
 def get_username_avatar_by_user_key(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
-    return user.avatar_name
+    avatar_path = url_for('static', filename='profile_pics/' + current_user.avatar_name)
+    return avatar_path
 
 
 @app.template_filter('get_date')
@@ -55,10 +57,7 @@ def before_request():
 @app.route('/')
 def index():
     posts = Post.query.order_by(Post.created.desc())
-    for post in posts:
-        print(post.img_path)
-        img_path = post.img_path
-    return render_template('index.html', title='Home', posts=posts, img_path=img_path)
+    return render_template('index.html', title='Home', posts=posts)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -84,12 +83,22 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-def save_picture(form_picture, folder):
+def save_picture(form_picture, folder, output_size=(1024, 1024)):
+    """
+    Function generate random name for picture, using token_hex and resize it.
+    :param: form_picture - data that form for uploding picture contains.
+    :param: folder - folder for saving picture
+    :param: output_size - size that we want to receive after resizing.
+    :return: picture_fn - picture filename, picture_path - path to picture in the project
+
+    """
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(folder, picture_fn)
-    form_picture.save(picture_path)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
     return (picture_fn, picture_path)
 
 
@@ -102,7 +111,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         if form.file.data:
-            img_name, img = save_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'])
+            img_name, img = save_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
             avatar_path = img
             avatar_name = img_name
         user = User(nickname=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data,
@@ -165,7 +174,7 @@ def post():
     img_path = None
     if form.validate_on_submit():
         if form.file.data:
-            img_name, img = save_picture(form.file.data, app.config['UPLOAD_FOLDER_POSTS'])
+            img_name, img = save_picture(form.file.data, app.config['UPLOAD_FOLDER_POSTS'], (125, 125))
         post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.id,
                 img_path=img, img_name=img_name)
         try:

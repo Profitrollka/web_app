@@ -87,10 +87,10 @@
         </div>
         <div class="form-group tm-color-gray">
            {{ form.file.label() }}<br>
-           {{ form.file(class="form-control-file") }}
+           {{ form.file(class="form-control-file") }}<br>
            {% if form.file.errors %}
                {% for error in form.file.errors %}
-                   <span style="color:red">{{ error }}</span><br>
+                   <span style="color:red">{{ error }}</span>
                {% endfor %}
            {% endif %}
         </div><br> 
