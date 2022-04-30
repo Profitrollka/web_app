@@ -1,7 +1,8 @@
 from app import db
 
 #First creating database
-db.create_all()
+# db.create_all()
+# db.session.commit()
 
 #Deleting all data from database
 db.delete_all()

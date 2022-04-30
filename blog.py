@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, Post, Tag, Comment, ROLE
+from app.models import User, Post, Comment, ROLE
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -7,7 +7,7 @@ import os
 
 @app.shell_context_processor
 def make_sell_context():
-    return {'db': db, 'User': User, 'Post': Post, 'Tag': Tag, 'Comment': Comment, 'ROLE': ROLE}
+    return {'db': db, 'User': User, 'Post': Post, 'Comment': Comment, 'ROLE': ROLE}
 
 if not app.debug:
     if not os.path.exists('logs'):
@@ -21,3 +21,4 @@ if not app.debug:
 
     app.logger.setLevel(logging.INFO)
     app.logger.info('Blog startup')
+    

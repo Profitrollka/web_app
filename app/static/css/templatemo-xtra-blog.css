@@ -284,6 +284,12 @@ ul {
     border: none;
 }
 
+.tm-btn-primary-sm {    
+    background-color: #cfb6d7;
+    color: white;  
+    border: none;
+}
+
 .tm-btn-small { padding: 8px 33px; }
 
 .tm-btn-back {

@@ -1,7 +1,11 @@
 """Flask configuration variables."""
 from os import environ, path
+from dotenv import load_dotenv
 
 basedir = path.abspath(path.dirname(__file__))
+dotenv_path = path.join(basedir, '.env')
+load_dotenv(dotenv_path)
+
 
 class BaseConfig:
     """Set Flask configuration from .env file."""
@@ -9,8 +13,8 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Database
-    SQLALCHEMY_DATABASE_URI = environ.get("SQLALCHEMY_DATABASE_URI")
-    SQLALCHEMY_MIGRATE_REPO = path.join(basedir, 'db_repository')
+    SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
+    # SQLALCHEMY_MIGRATE_REPO = path.join(basedir, 'db_repository')
     # SQLALCHEMY_ECHO = False
 
     # General Config
@@ -19,7 +23,6 @@ class BaseConfig:
     FLASK_ENV = environ.get('FLASK_ENV')
     UPLOAD_FOLDER_PROFILE = environ.get('UPLOAD_FOLDER_PROFILE')
     UPLOAD_FOLDER_POST = environ.get('UPLOAD_FOLDER_POST')
-    MAX_CONTENT_LENGTH = 1024 * 1024
     ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
     #Flask-Mail
@@ -29,5 +32,6 @@ class BaseConfig:
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
     ADMINS = environ.get('ADMINS')
+    
 
 

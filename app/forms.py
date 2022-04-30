@@ -15,6 +15,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
+
 class RegistrationForm(FlaskForm):
     first_name = StringField("First name", validators=[DataRequired(), Length(min=2, max=20)])
     last_name = StringField("Last name", validators=[DataRequired(), Length(min=2, max=20)])
@@ -32,7 +33,7 @@ class RegistrationForm(FlaskForm):
         for char in self.username.data:
             if char in excluded_chars:
                 raise ValidationError(f"Character {char} is not allowed in username.")
-        user = User.query.filter_by(nickname=username.data).first()
+        user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('That username is taken. Please choose a different one.')
 
@@ -72,9 +73,9 @@ class UpdateProfileForm(FlaskForm):
     submit = SubmitField('Update')
 
     def validate_username(self, username):
-        if current_user.nickname != username.data:
+        if current_user.username != username.data:
             try:
-                user = User.query.filter_by(nickname=username.data).first()
+                user = User.query.filter_by(username=username.data).first()
                 if user:
                     raise ValidationError('That username is taken. Please choose a different one.')
             except:
@@ -108,15 +109,11 @@ class UpdateProfileForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired(), Length(min=0, max=10)])
+    title = StringField("Title", validators=[DataRequired(), Length(min=0, max=100)])
     intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
     text = TextAreaField("Text", validators=[DataRequired(), Length(min=2, max=3000)])
     file = FileField("Add photos", validators=[FileAllowed(app.config['ALLOWED_EXTENSIONS'])])
     submit = SubmitField('Add post')
-
-    def __init__(self, user_id, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
-        self.user_id = user_id
 
 
 
