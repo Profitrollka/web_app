@@ -14,7 +14,7 @@ file_handler_for_logs.setLevel(logging.INFO)
 app.logger.addHandler(file_handler_for_logs)
 
 db = SQLAlchemy(app)
-# migrate = Migrate(app, db)
+migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
