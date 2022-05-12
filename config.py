@@ -6,9 +6,8 @@ basedir = path.abspath(path.dirname(__file__))
 dotenv_path = path.join(basedir, '.env')
 load_dotenv(dotenv_path)
 
-
 class BaseConfig:
-    """Set Flask configuration from .env file."""
+    """Set Flask configuration from .env file"""
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

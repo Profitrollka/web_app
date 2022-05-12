@@ -8,48 +8,6 @@ from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm, Update
 from app.models import User, Post, Comment
 from . import app, db, bcrypt
 
-# @app.template_filter('get_username')
-# def get_username_name_by_user_key(user_id):
-#     user = User.query.filter_by(id=user_id).first_or_404()
-#     return user.username
-
-
-# @app.template_filter('get_avatar')
-# def get_username_avatar_by_user_key(user_id):
-#     user = User.query.filter_by(id=user_id).first_or_404()
-#     picture_path = url_for('static', filename='profile_pics/' + current_user.picture_file)
-#     return picture_path
-
-
-# @app.template_filter('get_date')
-# def get_date_by_datetime(datetime):
-#     date = str(datetime)[:10]
-#     return date
-
-
-@app.template_filter('get_comments_count')
-def get_comments_count(post_id):
-    count = 0
-    comments = Comment.query.filter_by(post_id=post_id)
-    for comment in comments:
-        count += 1
-    return count
-
-
-@app.before_request
-def before_request():
-    if current_user.is_authenticated:
-        current_user.last_seen = datetime.utcnow()
-        db.session.commit()
-
-# для генерации ошибок, ответ не кастомизирован
-# @app.errorhandler(400)
-# def page_not_found(error):
-#     return 'Not allowed file extension, must be "jpg", "jpeg", "png"', 400
-
-# abort(make_response(jsonify(message="Error message"), 400))
-       
-
 
 @app.route('/')
 def index():
@@ -69,9 +27,11 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             flash(f'User {form.username.data} has been logged in!', 'success')
+            app.logger.info(f'User {user.username} logged in.')
             return redirect(next_page) if next_page else redirect(url_for('index'))
         else:
             flash("Login Unsuccessful. Please check username or password.", 'danger')
+            app.logger.info(f'User {user.username} failed to log in.')
             return redirect(url_for('login', next=request.endpoint))
     return render_template('login.html', title='Login', form=form)
 
@@ -81,7 +41,8 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-def save_picture(form_picture, folder, output_size=(1024, 1024)):
+
+def rename_and_resize_picture(form_picture: str, folder: str, output_size: tuple[int, int] = (1024, 1024)):
     """
     Function generate random name for picture, using token_hex and resize it.
     :param: form_picture - data that form for uploding picture contains.
@@ -95,7 +56,7 @@ def save_picture(form_picture, folder, output_size=(1024, 1024)):
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static', folder, picture_fn)
     i = Image.open(form_picture)
-    i.resi(output_size)
+    i.resize(output_size)
     i.save(picture_path)
     return picture_fn
 
@@ -108,17 +69,19 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         if form.file.data:
-            picture_file = save_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
+            picture_file = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data,
-                        email=form.email.data, picture_file=picture_file, password=hashed_password)
+                    email=form.email.data, picture_file=picture_file, password=hashed_password)
         try:
             db.session.add(user)
             db.session.commit()
             flash('Your account has been created! You are now able to log in', 'success')
+            app.logger.info(f'User {user.username} is registered')
             return redirect(url_for('login'))
         except:
             flash('An error occurred while saving data. Please try again later.', 'danger')
+            app.logger.warning(f"An error occurred while saving data (register new user)")
             return redirect(url_for('register'))
     return render_template('register.html', title='Registration', form=form)
 
@@ -131,16 +94,18 @@ def profile():
         current_user.username = form.username.data
         current_user.email = form.email.data
         current_user.about_me = form.about_me.data
-        current_user.first_name = form.first_name.data 
+        current_user.first_name = form.first_name.data
         current_user.last_name = form.last_name.data
         if form.file.data:
-            img_name = save_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
+            img_name = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
             current_user.picture_file = img_name
         try:
             db.session.commit()
             flash('Your profile has been updated!', 'success')
+            app.logger.info(f'User {current_user.username} updated profile.')
         except:
             flash('An error occurred while saving data. Please try again later.', 'danger')
+            app.logger.warning(f"An error occurred while saving data (update user's profile)")
             return redirect(url_for('profile'))
     elif request.method == "GET":
         form.username.data = current_user.username
@@ -148,8 +113,9 @@ def profile():
         form.about_me.data = current_user.about_me
         form.first_name.data = current_user.first_name
         form.last_name.data = current_user.last_name
-    picture_path = url_for('static', filename='profile_pics/'+current_user.picture_file)
+    picture_path = url_for('static', filename='profile_pics/' + current_user.picture_file)
     return render_template('profile.html', form=form, title='Profile', picture_path=picture_path)
+
 
 @app.route('/contact')
 def contact():
@@ -168,7 +134,7 @@ def new_post():
     img_name = 'default.jpeg'
     if form.validate_on_submit():
         if form.file.data:
-            img_name = save_picture(form.file.data, app.config['UPLOAD_FOLDER_POST'], (1023, 1023))
+            img_name = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_POST'], (1023, 1023))
         post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.user_id,
                     picture_file=img_name)
         try:
@@ -178,9 +144,11 @@ def new_post():
             db.session.commit()
             print('post commited')
             flash('Your post has been created!', 'success')
+            app.logger.info(f'User {current_user.username} added new post.')
             return redirect(url_for('index'))
         except:
             flash('An error occurred while saving data. Please try again later.', 'danger')
+            app.logger.warning(f"An error occurred while saving data (add new post)")
             return redirect(url_for('new_post'))
     return render_template('post.html', title='New post', form=form, legend='Add Post')
 
@@ -199,12 +167,15 @@ def single_post(post_id):
                     db.session.add(comment)
                     db.session.commit()
                     flash('Your cooment has been added!', 'success')
+                    app.logger.info(f'User {current_user.username} added new comment.')
                 except:
                     flash('An error occurred while saving data. Please try again later.', 'danger')
+                    app.logger.warning(f"An error occurred while saving data (add new comment)")
                     return redirect(url_for('single_post', post_id=post_id))
     # if comments is None:
     #     return render_template('single_post.html', post=post, posts=posts, form=form)
-    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form, post_id=post_id, title='Single post')    
+    return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form, post_id=post_id,
+                           title='Single post')
 
 
 @app.route('/<int:post_id>/update', methods=['GET', 'POST'])
@@ -219,14 +190,16 @@ def update_post(post_id):
         post.intro = form.intro.data
         post.text = form.text.data
         if form.file.data:
-            img_name = save_picture(form.file.data, app.config['UPLOAD_FOLDER_POST'], (1023, 1023))
+            img_name = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_POST'], (1023, 1023))
             post.picture_file = img_name
         try:
             db.session.commit()
-            flash('Your post has been added!', 'success')
+            flash('Your post has been updated!', 'success')
+            app.logger.info(f'User {current_user.username} updated post {post.post_id}.')
             return redirect(url_for('single_post', post_id=post_id))
         except:
             flash('An error occurred while saving data. Please try again later.', 'danger')
+            app.logger.warning(f"An error occurred while saving data (update post)")
             return redirect(url_for('single_post', post_id=post_id))
     elif request.method == "GET":
         form.title.data = post.title
@@ -245,10 +218,12 @@ def delete_post(post_id):
         db.session.delete(post)
         db.session.commit()
         flash('Your post has been deleted!', 'success')
+        app.logger.info(f'User {current_user.username} deleted post {post.post_id}.')
         return redirect(url_for('index'))
     except:
         flash('An error occurred while deleting post. Please try again later.', 'danger')
-        return redirect(url_for('single_post', post_id=post_id))  
+        app.logger.warning(f"An error occurred while saving data (delete post)")
+        return redirect(url_for('single_post', post_id=post_id))
 
 
 @app.route('/uploads/<filename>')
@@ -256,11 +231,38 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
-# @app.route('/error400')
-# def error400():
-#     return render_template('400.html', title='Error')
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
+
+# Filters
+@app.template_filter('get_comments_count')
+def get_comments_count(post_id):
+    count = 0
+    comments = Comment.query.filter_by(post_id=post_id)
+    for comment in comments:
+        count += 1
+    return count
+
+# @app.template_filter('get_username')
+# def get_username_name_by_user_key(user_id):
+#     user = User.query.filter_by(id=user_id).first_or_404()
+#     return user.username
 
 
+# @app.template_filter('get_avatar')
+# def get_username_avatar_by_user_key(user_id):
+#     user = User.query.filter_by(id=user_id).first_or_404()
+#     picture_path = url_for('static', filename='profile_pics/' + current_user.picture_file)
+#     return picture_path
+
+
+# @app.template_filter('get_date')
+# def get_date_by_datetime(datetime):
+#     date = str(datetime)[:10]
+#     return date
 
 # @app.route('/cookie/')
 # def cookie():
