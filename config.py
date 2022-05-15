@@ -1,4 +1,3 @@
-"""Flask configuration variables."""
 from os import environ, path
 from dotenv import load_dotenv
 
@@ -13,8 +12,6 @@ class BaseConfig:
 
     # Database
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
-    # SQLALCHEMY_MIGRATE_REPO = path.join(basedir, 'db_repository')
-    # SQLALCHEMY_ECHO = False
 
     # General Config
     SECRET_KEY = environ.get('SECRET_KEY')

@@ -1,12 +1,11 @@
-import os
-import secrets
-from PIL import Image
 from datetime import datetime
 from flask import abort, render_template, flash, redirect, url_for, request, send_from_directory, jsonify, make_response
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm, UpdateProfileForm
 from app.models import User, Post, Comment
 from . import app, db, bcrypt
+from app.media import ProfilePicture, PostPicture
+import os
 
 
 @app.route('/')
@@ -31,7 +30,6 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('index'))
         else:
             flash("Login Unsuccessful. Please check username or password.", 'danger')
-            app.logger.info(f'User {user.username} failed to log in.')
             return redirect(url_for('login', next=request.endpoint))
     return render_template('login.html', title='Login', form=form)
 
@@ -42,40 +40,25 @@ def logout():
     return redirect(url_for('login'))
 
 
-def rename_and_resize_picture(form_picture: str, folder: str, output_size: tuple[int, int] = (1024, 1024)):
-    """
-    Function generate random name for picture, using token_hex and resize it.
-    :param: form_picture - data that form for uploding picture contains.
-    :param: folder - folder for saving picture
-    :param: output_size - size that we want to receive after resizing.
-    :return: picture_fn - picture filename, picture_path - path to picture in the project
-
-    """
-    random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(form_picture.filename)
-    picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static', folder, picture_fn)
-    i = Image.open(form_picture)
-    i.resize(output_size)
-    i.save(picture_path)
-    return picture_fn
-
-
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    picture_file = 'default.jpg'
+    picture_file = ProfilePicture(app.config['UPLOAD_FOLDER_PROFILE'])
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         if form.file.data:
-            picture_file = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
+            picture_file = ProfilePicture(form.file.data)
+            picture_file.resize_picture()
+            picture_file.rename_picture()
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user = User(username=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data,
-                    email=form.email.data, picture_file=picture_file, password=hashed_password)
+                    email=form.email.data, picture_file=picture_file.name, password=hashed_password)
         try:
             db.session.add(user)
             db.session.commit()
+            if form.file.data:
+                picture_file.save_picture(app.config['UPLOAD_FOLDER_PROFILE'])
             flash('Your account has been created! You are now able to log in', 'success')
             app.logger.info(f'User {user.username} is registered')
             return redirect(url_for('login'))
@@ -97,10 +80,14 @@ def profile():
         current_user.first_name = form.first_name.data
         current_user.last_name = form.last_name.data
         if form.file.data:
-            img_name = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_PROFILE'], (125, 125))
-            current_user.picture_file = img_name
+            picture_file = ProfilePicture(form.file.data)
+            picture_file.resize_picture()
+            picture_file.rename_picture()
+            current_user.picture_file = picture_file.name
         try:
             db.session.commit()
+            if form.file.data:
+                picture_file.save_picture(app.config['UPLOAD_FOLDER_PROFILE'])
             flash('Your profile has been updated!', 'success')
             app.logger.info(f'User {current_user.username} updated profile.')
         except:
@@ -131,18 +118,19 @@ def about():
 @login_required
 def new_post():
     form = PostForm()
-    img_name = 'default.jpeg'
+    picture_file = PostPicture(app.config['UPLOAD_FOLDER_POST'])
     if form.validate_on_submit():
         if form.file.data:
-            img_name = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_POST'], (1023, 1023))
+            picture_file = PostPicture(form.file.data)
+            picture_file.rename_picture()
+            picture_file.resize_picture()
         post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.user_id,
-                    picture_file=img_name)
+                    picture_file=picture_file.name)
         try:
             db.session.add(post)
-            print('post added')
-            print(post)
             db.session.commit()
-            print('post commited')
+            if form.file.data:
+                picture_file.save_picture(app.config['UPLOAD_FOLDER_POST'])
             flash('Your post has been created!', 'success')
             app.logger.info(f'User {current_user.username} added new post.')
             return redirect(url_for('index'))
@@ -182,6 +170,7 @@ def single_post(post_id):
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
+    print(post.picture_file)
     if post.author != current_user:
         abort(403)
     form = PostForm()
@@ -190,10 +179,14 @@ def update_post(post_id):
         post.intro = form.intro.data
         post.text = form.text.data
         if form.file.data:
-            img_name = rename_and_resize_picture(form.file.data, app.config['UPLOAD_FOLDER_POST'], (1023, 1023))
-            post.picture_file = img_name
+            picture_file = PostPicture(form.file.data)
+            picture_file.rename_picture()
+            picture_file.resize_picture()
+            post.picture_file = picture_file.name
         try:
             db.session.commit()
+            if form.file.data:
+                picture_file.save_picture(app.config['UPLOAD_FOLDER_POST'])
             flash('Your post has been updated!', 'success')
             app.logger.info(f'User {current_user.username} updated post {post.post_id}.')
             return redirect(url_for('single_post', post_id=post_id))
@@ -215,8 +208,11 @@ def delete_post(post_id):
     if post.author != current_user:
         abort(403)
     try:
+        picture_for_delete = post.picture_file
         db.session.delete(post)
         db.session.commit()
+        path = os.path.join(app.root_path, 'static', app.config['UPLOAD_FOLDER_POST'], picture_for_delete)
+        os.remove(path)
         flash('Your post has been deleted!', 'success')
         app.logger.info(f'User {current_user.username} deleted post {post.post_id}.')
         return redirect(url_for('index'))
@@ -236,6 +232,13 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
+# @app.route('/search/<tagname>')
+# def search(tagname):
+#     page = request.args.get('page', 1, type=int)
+#     posts = Post.query.with_parent(tagname).all().paginate(page=page, per_page=4)
+#     return render_template('tags.html', title='Home', posts=posts)
+
 
 # Filters
 @app.template_filter('get_comments_count')

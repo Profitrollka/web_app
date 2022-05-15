@@ -8,11 +8,10 @@
 <div class="row tm-row">
     <div class="col-12">
         <hr class="tm-hr-primary tm-mb-55">
-        <a href="{{ url_for('uploaded_file', filename=post.img_name) }}" class="effect-lily tm-post-link tm-pt-60">
+        <a href="{{ url_for('uploaded_file', filename=post.img_name) }}" class="effect-lily tm-post-link">
             <div class="tm-post-link-inner">
-                <img src="{{ url_for('static', filename='post_pics/'+post.picture_file) }}"/>
+                <img width="10px" src="{{ url_for('static', filename='post_pics/'+post.picture_file) }}"/>
             </div>
-            <span class="position-absolute tm-new-badge">New</span>
             <h2 class="tm-pt-30 tm-color-primary tm-post-title">{{ post.title }}</h2>
         </a>
     </div>
@@ -29,17 +28,15 @@
                       Delete
                     </button>
                 {% endif %}
-                <p> {{ post.intro }}</p>
-                <p> {{ post.text }}</p>
+                <p>{{ post.intro }}</p>
+                <p style="white-space:pre-wrap">{{ post.text}}</p>
                 <span class="d-block text-right tm-color-primary">Creative . Design . Business</span>
             </div>
             <!-- Comments -->
             <h2 class="tm-color-primary tm-post-title">Comments</h2>
             {% for comment in comments %}
-            <p><img class="rounded-circle" src="{{ url_for('static', filename=comment.user_id.picture_path) }}" width="100" height="100" class="leftimg"/>
-                <p class="tm-color-primary">{{ comment.author.user_id }}</p>
+                <p class="tm-color-primary">{{ comment.author.username }}</p>
                 <p class="tm-color-gray"> {{ comment.text }}</p>
-                <p class="tm-color-gray"> {{ comment.created.strftime('%Y-%m-%d') }}</p>
             {% endfor %}
             <form action="" method="post" novalidate enctype="multipart/form-data">
                 {{ form.csrf_token() }}
