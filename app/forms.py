@@ -105,6 +105,7 @@ class PostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(min=0, max=100)])
     intro = TextAreaField("Intro", validators=[DataRequired(), Length(min=0, max=360)])
     text = TextAreaField("Text", validators=[DataRequired(), Length(min=2, max=3000)])
+    tag = TextAreaField("Tags", validators=[Length(max=64)])
     file = FileField("Add photos", validators=[FileAllowed(app.config['ALLOWED_EXTENSIONS'])])
     submit = SubmitField('Add post')
 

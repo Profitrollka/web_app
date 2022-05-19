@@ -2,7 +2,7 @@ from datetime import datetime
 from flask import abort, render_template, flash, redirect, url_for, request, send_from_directory, jsonify, make_response
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm, UpdateProfileForm
-from app.models import User, Post, Comment
+from app.models import User, Post, Comment, Tag
 from . import app, db, bcrypt
 from app.media import ProfilePicture, PostPicture
 import os
@@ -126,6 +126,14 @@ def new_post():
             picture_file.resize_picture()
         post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.user_id,
                     picture_file=picture_file.name)
+        for word in form.tag.data.replace(" ", "").replace(",", "").split("#"):
+            tag = Tag(tag_name=word)
+            post.tags.append(tag)
+            try:
+
+                db.session.add(tag)
+            except:
+                flash('An error occurred while saving data. Please try again later.', 'danger')
         try:
             db.session.add(post)
             db.session.commit()
@@ -138,6 +146,7 @@ def new_post():
             flash('An error occurred while saving data. Please try again later.', 'danger')
             app.logger.warning(f"An error occurred while saving data (add new post)")
             return redirect(url_for('new_post'))
+
     return render_template('post.html', title='New post', form=form, legend='Add Post')
 
 
@@ -183,7 +192,9 @@ def update_post(post_id):
             picture_file.rename_picture()
             picture_file.resize_picture()
             post.picture_file = picture_file.name
+            print(post.picture_file)
         try:
+            db.session.add(post)
             db.session.commit()
             if form.file.data:
                 picture_file.save_picture(app.config['UPLOAD_FOLDER_POST'])

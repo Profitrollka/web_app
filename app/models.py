@@ -47,6 +47,10 @@ class User(db.Model, DateMixin, UserMixin):
 #                     db.Column('folowed_id', db.Integer, db.ForeignKey('user.id')))
 
 
+post_tags = db.Table('post_tags',
+                     db.Column('post_id', db.Integer, db.ForeignKey('post.post_id'), primary_key=True),
+                     db.Column('tag_id', db.Integer, db.ForeignKey('tag.tag_id'), primary_key=True)
+                     )
 
 class Post(db.Model, DateMixin):
 
@@ -56,28 +60,19 @@ class Post(db.Model, DateMixin):
     text = db.Column(db.Text(), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
     picture_file = db.Column(db.String(50), nullable=True, default='default.jpeg')
-    # tags =db.relationship('post_tags', secondary='post', join=(post_tags.c.post_id==id), backref=db.backref('Post', lazy='dynamic'), lazy='dynamic')
-
+    tags =db.relationship('Tag', secondary=post_tags, back_populates='posts')
 
     def __repr__(self):
         return f"Post ('{self.post_id}', '{self.title}')"
 
 
-# post_tags = db.Table('post_tags',
-#                      db.Column('post_id', db.Integer, db.ForeignKey('post.id')),
-#                      db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'))
-#                      )
+class Tag(db.Model):
+    tag_id = db.Column(db.Integer, primary_key=True)
+    tag_name = db.Column(db.String(64), nullable=False)
+    posts = db.relationship('Post', secondary=post_tags, back_populates="tags")
 
-
-# class Tag(db.Model):
-#     tag_id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(64), nullable=False)
-#     slug = db.Column(db.String(140), nullable=False)
-#     created = db.Column(db.DateTime, default=datetime.utcnow)
-#     posts = db.relationship('Post', secondary=post_tags, backref='tag')
-
-#     def __repr__(self):
-#         return "<{}:{}>".format(self.id, self.name)
+    def __repr__(self):
+        return "<{}:{}>".format(self.tag_id, self.tag_name)
 
 
 class Comment(db.Model, DateMixin):
