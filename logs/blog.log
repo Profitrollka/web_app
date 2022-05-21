@@ -1,71 +1,94 @@
-[2022-05-12 20:29:05,318] INFO: User admin logged in
-[2022-05-13 12:32:51,266] INFO: User admin logged in.
-[2022-05-13 12:38:11,495] INFO: User admin added new post.
-[2022-05-13 12:41:30,784] INFO: User ami logged in.
-[2022-05-13 12:41:38,527] INFO: User ami logged in.
-[2022-05-13 12:44:41,749] INFO: User ami logged in.
-[2022-05-13 12:45:03,750] WARNING: An error occurred while saving data (add new post)
-[2022-05-13 12:45:38,385] WARNING: An error occurred while saving data (add new post)
-[2022-05-13 12:46:05,966] INFO: User ami added new post.
-[2022-05-13 12:46:48,640] INFO: User admin logged in.
-[2022-05-13 12:53:45,214] WARNING: An error occurred while saving data (update post)
-[2022-05-13 13:01:23,780] INFO: User admin updated profile.
-[2022-05-13 13:01:55,814] INFO: User admin updated post 1.
-[2022-05-13 13:07:33,492] INFO: User ami logged in.
-[2022-05-13 13:22:43,892] INFO: User ami updated post 5.
-[2022-05-13 16:37:26,154] INFO: User ami updated post 3.
-[2022-05-13 16:41:00,513] INFO: User admin logged in.
-[2022-05-13 16:41:21,078] INFO: User admin updated post 1.
-[2022-05-13 16:44:41,853] INFO: User admin updated post 1.
-[2022-05-13 17:25:54,894] WARNING: An error occurred while saving data (update post)
-[2022-05-13 17:29:33,209] WARNING: An error occurred while saving data (update post)
-[2022-05-13 17:34:44,512] INFO: User admin updated post 2.
-[2022-05-13 17:38:44,561] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:01:30,912] INFO: User admin updated post 1.
-[2022-05-14 11:09:57,108] INFO: User admin updated post 1.
-[2022-05-14 11:13:29,886] INFO: User ami logged in.
-[2022-05-14 11:13:43,217] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:14:38,351] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:17:34,477] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:19:05,729] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:19:43,256] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:25:30,377] INFO: User ami updated post 5.
-[2022-05-14 11:32:27,324] INFO: User ami updated post 5.
-[2022-05-14 11:39:56,366] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:47:51,314] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:48:18,025] WARNING: An error occurred while saving data (update post)
-[2022-05-14 11:48:28,519] INFO: User ami updated post 5.
-[2022-05-14 11:49:14,816] INFO: User ami updated post 5.
-[2022-05-14 12:13:30,826] INFO: User ami deleted post 3.
-[2022-05-14 12:14:28,509] INFO: User ami deleted post 7.
-[2022-05-14 20:45:57,880] INFO: User ami logged in.
-[2022-05-14 20:46:15,785] INFO: User admin logged in.
-[2022-05-14 20:47:10,372] INFO: User admin added new comment.
-[2022-05-14 20:47:48,684] INFO: User ami logged in.
-[2022-05-14 20:48:35,645] INFO: User ami updated post 5.
-[2022-05-15 12:30:33,009] INFO: User ami added new post.
-[2022-05-15 12:35:00,689] INFO: User ami updated post 8.
-[2022-05-15 12:40:34,096] INFO: User ami updated post 8.
-[2022-05-15 12:45:52,743] INFO: User ami updated post 8.
-[2022-05-15 12:46:17,977] INFO: User ami updated post 8.
-[2022-05-15 12:52:01,562] INFO: User ami updated post 4.
-[2022-05-19 20:27:46,649] WARNING: An error occurred while saving data (update post)
-[2022-05-19 20:29:16,680] INFO: User ami updated post 5.
-[2022-05-19 20:29:44,914] WARNING: An error occurred while saving data (update post)
-[2022-05-19 20:44:33,681] INFO: User ami updated post 5.
-[2022-05-19 20:47:24,755] WARNING: An error occurred while saving data (update post)
-[2022-05-19 20:48:17,011] WARNING: An error occurred while saving data (update post)
-[2022-05-19 20:49:37,178] WARNING: An error occurred while saving data (update post)
-[2022-05-19 20:50:32,870] INFO: User ami updated post 8.
-[2022-05-19 21:26:29,212] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:26:53,126] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:27:56,748] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:33:10,978] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:36:27,110] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:37:52,950] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:38:30,454] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:39:46,743] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:41:07,873] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:42:51,765] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:45:24,250] WARNING: An error occurred while saving data (add new post)
-[2022-05-19 21:46:14,816] INFO: User ami added new post.
+[2022-05-20 21:57:25,339] ERROR: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+
+[SQL: UPDATE post SET updated=%(updated)s, picture_file=%(picture_file)s WHERE post.post_id = %(post_post_id)s]
+[parameters: {'updated': datetime.datetime(2022, 5, 20, 18, 57, 25, 337461), 'picture_file': '8f716aaab117a5c6.jpeg', 'post_post_id': 8}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)
+Traceback (most recent call last):
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.StringDataRightTruncation: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/alenak/Projects/web_app/app/view.py", line 200, in update_post
+    db.session.commit()
+  File "<string>", line 2, in commit
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 1431, in commit
+    self._transaction.commit(_to_root=self.future)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 829, in commit
+    self._prepare_impl()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 808, in _prepare_impl
+    self.session.flush()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3363, in flush
+    self._flush(objects)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3503, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3463, in _flush
+    flush_context.execute()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 456, in execute
+    rec.execute(self)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 630, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 236, in save_obj
+    _emit_update_statements(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 1000, in _emit_update_statements
+    c = connection._execute_20(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1620, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 325, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1487, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1851, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2032, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.DataError: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+
+[SQL: UPDATE post SET updated=%(updated)s, picture_file=%(picture_file)s WHERE post.post_id = %(post_post_id)s]
+[parameters: {'updated': datetime.datetime(2022, 5, 20, 18, 57, 25, 337461), 'picture_file': '8f716aaab117a5c6.jpeg', 'post_post_id': 8}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)
+[2022-05-21 10:02:29,607] INFO: User admin logged in.
+[2022-05-21 10:02:43,028] INFO: User admin updated post 6.
+[2022-05-21 11:44:14,589] INFO: User admin updated post 2.
+[2022-05-21 11:47:44,114] INFO: User admin updated post 2.
+[2022-05-21 11:57:54,774] INFO: User admin updated post 2.
+[2022-05-21 11:59:44,834] INFO: User admin updated post 2.
+[2022-05-21 12:02:44,609] INFO: User admin updated post 2.
+[2022-05-21 12:20:42,233] INFO: User admin updated post 2.
+[2022-05-21 12:21:46,751] INFO: User admin updated post 2.
+[2022-05-21 12:45:25,869] INFO: User admin updated post 2.
+[2022-05-21 12:45:42,621] INFO: User admin updated post 1.
+[2022-05-21 12:48:46,234] INFO: User admin added new post.
+[2022-05-21 12:56:24,351] INFO: User admin updated post 21.
+[2022-05-21 12:58:01,130] INFO: User admin updated post 21.
+[2022-05-21 12:59:12,854] INFO: User admin updated post 21.
+[2022-05-21 13:00:55,204] INFO: User admin updated post 21.
+[2022-05-21 13:02:47,444] INFO: User admin updated post 21.
+[2022-05-21 13:37:04,802] INFO: User admin updated post 21.
+[2022-05-21 13:37:56,182] INFO: User admin updated post 21.
+[2022-05-21 13:38:36,742] INFO: User admin updated post 21.
+[2022-05-21 13:39:58,865] INFO: User admin updated post 21.
+[2022-05-21 13:41:33,963] INFO: User admin updated post 21.
+[2022-05-21 13:50:36,867] INFO: User admin added new comment.
+[2022-05-21 13:54:57,201] INFO: User admin added new comment.
+[2022-05-21 13:55:55,600] INFO: User admin added new comment.
+[2022-05-21 13:58:13,669] INFO: User admin added new comment.
+[2022-05-21 13:59:05,211] INFO: User admin added new comment.
+[2022-05-21 14:02:13,845] INFO: User admin added new comment.
+[2022-05-21 14:02:25,905] INFO: User admin added new comment.
+[2022-05-21 14:02:43,645] INFO: User admin added new comment.

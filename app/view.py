@@ -2,16 +2,17 @@ from datetime import datetime
 from flask import abort, render_template, flash, redirect, url_for, request, send_from_directory, jsonify, make_response
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm, UpdateProfileForm
-from app.models import User, Post, Comment, Tag
+from app.models import User, Post, Comment, Tag, post_tags
 from . import app, db, bcrypt
 from app.media import ProfilePicture, PostPicture
 import os
+import json
 
 
 @app.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.paginate(page=page, per_page=4)
+    posts = Post.query.order_by(Post.created.desc()).paginate(page=page, per_page=4)
     return render_template('index.html', title='Home', posts=posts)
 
 
@@ -62,9 +63,10 @@ def register():
             flash('Your account has been created! You are now able to log in', 'success')
             app.logger.info(f'User {user.username} is registered')
             return redirect(url_for('login'))
-        except:
+        except Exception as e:
             flash('An error occurred while saving data. Please try again later.', 'danger')
             app.logger.warning(f"An error occurred while saving data (register new user)")
+            app.logger.exception(e)
             return redirect(url_for('register'))
     return render_template('register.html', title='Registration', form=form)
 
@@ -90,9 +92,10 @@ def profile():
                 picture_file.save_picture(app.config['UPLOAD_FOLDER_PROFILE'])
             flash('Your profile has been updated!', 'success')
             app.logger.info(f'User {current_user.username} updated profile.')
-        except:
+        except Exception as e:
             flash('An error occurred while saving data. Please try again later.', 'danger')
             app.logger.warning(f"An error occurred while saving data (update user's profile)")
+            app.logger.exception(e)
             return redirect(url_for('profile'))
     elif request.method == "GET":
         form.username.data = current_user.username
@@ -126,14 +129,21 @@ def new_post():
             picture_file.resize_picture()
         post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.user_id,
                     picture_file=picture_file.name)
-        for word in form.tag.data.replace(" ", "").replace(",", "").split("#"):
-            tag = Tag(tag_name=word)
-            post.tags.append(tag)
-            try:
-
-                db.session.add(tag)
-            except:
-                flash('An error occurred while saving data. Please try again later.', 'danger')
+        post_tags_list = []
+        for word in form.tag.data.replace(" ", "").replsce("#", "").replace("[", "").replace("]", "").split(","):
+            tag = Tag.query.filter_by(tag_name=word).first()
+            if tag:
+                pass
+            else:
+                tag = Tag(tag_name=word)
+                try:
+                    db.session.add(tag)
+                except Exception as e:
+                    flash('An error occurred while saving data. Please try again later.', 'danger')
+                    app.logger.warning(f"An error occurred while saving data (add new tag)")
+                    app.logger.exception(e)
+            post_tags_list.append(tag)
+        post.tags = post_tags_list
         try:
             db.session.add(post)
             db.session.commit()
@@ -142,9 +152,10 @@ def new_post():
             flash('Your post has been created!', 'success')
             app.logger.info(f'User {current_user.username} added new post.')
             return redirect(url_for('index'))
-        except:
+        except Exception as e:
             flash('An error occurred while saving data. Please try again later.', 'danger')
             app.logger.warning(f"An error occurred while saving data (add new post)")
+            app.logger.exception(e)
             return redirect(url_for('new_post'))
 
     return render_template('post.html', title='New post', form=form, legend='Add Post')
@@ -165,21 +176,19 @@ def single_post(post_id):
                     db.session.commit()
                     flash('Your cooment has been added!', 'success')
                     app.logger.info(f'User {current_user.username} added new comment.')
-                except:
+                except Exception as e:
                     flash('An error occurred while saving data. Please try again later.', 'danger')
                     app.logger.warning(f"An error occurred while saving data (add new comment)")
+                    app.logger.exception(e)
                     return redirect(url_for('single_post', post_id=post_id))
-    # if comments is None:
-    #     return render_template('single_post.html', post=post, posts=posts, form=form)
     return render_template('single_post.html', post=post, posts=posts, comments=comments, form=form, post_id=post_id,
-                           title='Single post')
+                           post_tags=post_tags, title='Single post')
 
 
 @app.route('/<int:post_id>/update', methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
-    print(post.picture_file)
     if post.author != current_user:
         abort(403)
     form = PostForm()
@@ -192,23 +201,38 @@ def update_post(post_id):
             picture_file.rename_picture()
             picture_file.resize_picture()
             post.picture_file = picture_file.name
-            print(post.picture_file)
+        post_tags_list = []
+        for word in form.tag.data.replace(" ", "").replace("#", "").replace("[", "").replace("]", "").split(","):
+            tag = Tag.query.filter_by(tag_name=word).first()
+            if tag:
+                pass
+            else:
+                tag = Tag(tag_name=word)
+                try:
+                    db.session.add(tag)
+                except Exception as e:
+                    flash('An error occurred while saving data. Please try again later.', 'danger')
+                    app.logger.warning(f"An error occurred while saving data (add new tag)")
+                    app.logger.exception(e)
+            post_tags_list.append(tag)
+        post.tags = post_tags_list
         try:
-            db.session.add(post)
             db.session.commit()
             if form.file.data:
                 picture_file.save_picture(app.config['UPLOAD_FOLDER_POST'])
             flash('Your post has been updated!', 'success')
             app.logger.info(f'User {current_user.username} updated post {post.post_id}.')
             return redirect(url_for('single_post', post_id=post_id))
-        except:
+        except Exception as e:
             flash('An error occurred while saving data. Please try again later.', 'danger')
             app.logger.warning(f"An error occurred while saving data (update post)")
+            app.logger.exception(e)
             return redirect(url_for('single_post', post_id=post_id))
     elif request.method == "GET":
         form.title.data = post.title
         form.intro.data = post.intro
         form.text.data = post.text
+        form.tag.data = post.tags
     return render_template('post.html', title='Update post', form=form, legend='Update Post')
 
 
@@ -218,8 +242,10 @@ def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
     if post.author != current_user:
         abort(403)
+    for comment in post.comments:
+        db.session.delete(comment)
+    picture_for_delete = post.picture_file
     try:
-        picture_for_delete = post.picture_file
         db.session.delete(post)
         db.session.commit()
         path = os.path.join(app.root_path, 'static', app.config['UPLOAD_FOLDER_POST'], picture_for_delete)
@@ -227,11 +253,18 @@ def delete_post(post_id):
         flash('Your post has been deleted!', 'success')
         app.logger.info(f'User {current_user.username} deleted post {post.post_id}.')
         return redirect(url_for('index'))
-    except:
+    except Exception as e:
         flash('An error occurred while deleting post. Please try again later.', 'danger')
         app.logger.warning(f"An error occurred while saving data (delete post)")
+        app.logger.exception(e)
         return redirect(url_for('single_post', post_id=post_id))
 
+
+@app.route('/posts/search', methods=['GET'])
+def search_posts():
+    tags = json.loads(request.data['tags'])
+    posts = db.session.query(Post).join(post_tags).join(Tag).filter(Tag.tag.in_(tags)).group_by(Post.post_id).all()
+    return jsonify(posts)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):

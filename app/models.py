@@ -68,11 +68,11 @@ class Post(db.Model, DateMixin):
 
 class Tag(db.Model):
     tag_id = db.Column(db.Integer, primary_key=True)
-    tag_name = db.Column(db.String(64), nullable=False)
+    tag_name = db.Column(db.String(64), unique=True, index=True, nullable=False)
     posts = db.relationship('Post', secondary=post_tags, back_populates="tags")
 
     def __repr__(self):
-        return "<{}:{}>".format(self.tag_id, self.tag_name)
+        return f"#{self.tag_name}"
 
 
 class Comment(db.Model, DateMixin):

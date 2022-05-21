@@ -290,6 +290,11 @@ ul {
     border: none;
 }
 
+.tm-btn-primary-sm-new {
+    color: #cfb6d7;
+    border: none;
+}
+
 .tm-btn-small { padding: 8px 33px; }
 
 .tm-btn-back {
