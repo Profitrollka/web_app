@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block content%}
 <div class="row tm-row">
-        {% for post in posts %}
+    <h3 class="tm-color-primary">Searching results for: {{ query }}</h3>
+    {% for post in posts %}
     <article class="col-12 col-md-6 tm-post">
-        <hr class="tm-hr-primary ">
+        <hr class="tm-hr-primary">
         <a href="{{ url_for('single_post', post_id=post.post_id) }}" class="effect-lily tm-post-link tm-pt-60">
             <div class="tm-post-link-inner tm-pt-55">
                 <img src="{{ url_for('static', filename='post_pics/'+post.picture_file) }}"/>
@@ -23,5 +24,5 @@
         </div>
     </article>
     {% endfor %}
-</div>>
+</div>
 {% endblock %}
