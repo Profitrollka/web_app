@@ -1,18 +1,24 @@
-from datetime import datetime
-from flask import abort, render_template, flash, redirect, url_for, request, send_from_directory, jsonify, make_response
-from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm, UpdateProfileForm
-from app.models import User, Post, Comment, Tag, post_tags
-from . import app, db, bcrypt
-from app.media import ProfilePicture, PostPicture
-import os
 import json
+import os
+from datetime import datetime
+
+from flask import abort, render_template, flash, redirect, url_for, request, send_from_directory, jsonify
+from flask_login import current_user, login_user, logout_user, login_required
+from app.forms import LoginForm, RegistrationForm, PostForm, CommentForm, UpdateProfileForm, SearchForm
+from app.media import ProfilePicture, PostPicture
+from app.models import User, Post, Comment, Tag, post_tags, ROLE
+from . import app, db, bcrypt
 
 
 @app.route('/')
 def index():
-    page = request.args.get('page', 1, type=int)
-    posts = Post.query.order_by(Post.created.desc()).paginate(page=page, per_page=4)
+    query = request.args.get('query')
+    print(query)
+    if query:
+        return redirect(url_for('search', tagname=query))
+    else:
+        page = request.args.get('page', 1, type=int)
+        posts = Post.query.order_by(Post.created.desc()).paginate(page=page, per_page=4)
     return render_template('index.html', title='Home', posts=posts)
 
 
@@ -130,18 +136,19 @@ def new_post():
         post = Post(title=form.title.data, intro=form.intro.data, text=form.text.data, user_id=current_user.user_id,
                     picture_file=picture_file.name)
         post_tags_list = []
-        for word in form.tag.data.replace(" ", "").replsce("#", "").replace("[", "").replace("]", "").split(","):
-            tag = Tag.query.filter_by(tag_name=word).first()
-            if tag:
-                pass
-            else:
-                tag = Tag(tag_name=word)
-                try:
-                    db.session.add(tag)
-                except Exception as e:
-                    flash('An error occurred while saving data. Please try again later.', 'danger')
-                    app.logger.warning(f"An error occurred while saving data (add new tag)")
-                    app.logger.exception(e)
+        if form.tag.data:
+            for word in form.tag.data.replace(" ", "").replsce("#", "").replace("[", "").replace("]", "").split(","):
+                tag = Tag.query.filter_by(tag_name=word.lower()).first()
+                if tag:
+                    pass
+                else:
+                    tag = Tag(tag_name=word.lower())
+                    try:
+                        db.session.add(tag)
+                    except Exception as e:
+                        flash('An error occurred while saving data. Please try again later.', 'danger')
+                        app.logger.warning(f"An error occurred while saving data (add new tag)")
+                        app.logger.exception(e)
             post_tags_list.append(tag)
         post.tags = post_tags_list
         try:
@@ -157,7 +164,6 @@ def new_post():
             app.logger.warning(f"An error occurred while saving data (add new post)")
             app.logger.exception(e)
             return redirect(url_for('new_post'))
-
     return render_template('post.html', title='New post', form=form, legend='Add Post')
 
 
@@ -165,7 +171,7 @@ def new_post():
 def single_post(post_id):
     form = CommentForm()
     post = Post.query.get_or_404(post_id)
-    posts = Post.query.order_by(Post.created.desc())
+    posts = Post.query.order_by(Post.created.desc()).limit(5).all()
     comments = Comment.query.filter(Comment.post_id == post_id)
     if request.method == 'POST':
         if current_user.is_authenticated:
@@ -174,7 +180,7 @@ def single_post(post_id):
                 try:
                     db.session.add(comment)
                     db.session.commit()
-                    flash('Your cooment has been added!', 'success')
+                    flash('Your comment has been added!', 'success')
                     app.logger.info(f'User {current_user.username} added new comment.')
                 except Exception as e:
                     flash('An error occurred while saving data. Please try again later.', 'danger')
@@ -185,7 +191,7 @@ def single_post(post_id):
                            post_tags=post_tags, title='Single post')
 
 
-@app.route('/<int:post_id>/update', methods=['GET', 'POST'])
+@app.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -203,11 +209,11 @@ def update_post(post_id):
             post.picture_file = picture_file.name
         post_tags_list = []
         for word in form.tag.data.replace(" ", "").replace("#", "").replace("[", "").replace("]", "").split(","):
-            tag = Tag.query.filter_by(tag_name=word).first()
+            tag = Tag.query.filter_by(tag_name=word.lower()).first()
             if tag:
                 pass
             else:
-                tag = Tag(tag_name=word)
+                tag = Tag(tag_name=word.lower())
                 try:
                     db.session.add(tag)
                 except Exception as e:
@@ -266,9 +272,54 @@ def search_posts():
     posts = db.session.query(Post).join(post_tags).join(Tag).filter(Tag.tag.in_(tags)).group_by(Post.post_id).all()
     return jsonify(posts)
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/comment/<int:comment_id>/update', methods=['GET', 'POST'])
+@login_required
+def update_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    print(comment)
+    if comment.author != current_user:
+        abort(403)
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment.text = form.text.data
+        try:
+            db.session.commit()
+            flash('Your comment has been updated!', 'success')
+            app.logger.info(f'User {current_user.username} updated comment {comment.comment_id}.')
+            return redirect(url_for('single_post', post_id=comment.post_id))
+        except Exception as e:
+            flash('An error occurred while saving data. Please try again later.', 'danger')
+            app.logger.warning(f"An error occurred while saving data (update comment)")
+            app.logger.exception(e)
+            return redirect(url_for('single_post', post_id=comment.post_id))
+    elif request.method == "GET":
+        form.text.data = comment.text
+    return render_template('comment.html', title='Update comment', form=form, legend='Update Comment')
+
+
+@app.route('/comment/<int:comment_id>/delete', methods=['POST', 'GET'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if comment.author != current_user:
+        abort(403)
+    try:
+        db.session.delete(comment)
+        db.session.commit()
+        flash('Your comment has been deleted!', 'success')
+        app.logger.info(f'User {current_user.username} deleted comment {comment.comment_id}.')
+        return redirect(url_for('single_post', post_id=comment.post_id))
+    except Exception as e:
+        flash('An error occurred while deleting post. Please try again later.', 'danger')
+        app.logger.warning(f"An error occurred while saving data (delete comment)")
+        app.logger.exception(e)
+        return redirect(url_for('single_post', post_id=comment.post_id))
+
+
+@app.route('/uploads/<path:name>')
+def uploaded_file(name):
+    return send_from_directory(os.path.abspath(os.path.dirname(__file__))+"/static/post_pics", name)
 
 
 @app.before_request
@@ -277,39 +328,55 @@ def before_request():
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
 
-# @app.route('/search/<tagname>')
-# def search(tagname):
-#     page = request.args.get('page', 1, type=int)
-#     posts = Post.query.with_parent(tagname).all().paginate(page=page, per_page=4)
-#     return render_template('tags.html', title='Home', posts=posts)
 
+@app.route('/search_by_tag/<tagname>', methods=["GET"])
+def search_by_tag(tagname):
+    tag = Tag.query.filter_by(tag_name=tagname).first()
+    posts_id = db.session.query(post_tags).filter_by(tag_id=tag.tag_id).all()
+    posts = []
+    for post_id in posts_id:
+        post = Post.query.filter_by(post_id=post_id[0]).first()
+        posts.append(post)
+    return render_template('tags.html', title='Posts', posts=posts)
+
+
+@app.route('/search_by_query', methods=["POST"])
+def search_by_query():
+    form =SearchForm()
+    posts = Post.query
+    if form.validate_on_submit():
+        query = form.query.data
+        posts = posts.filter(Post.text.like('%'+query+'%'))
+        posts = posts.order_by(Post.created.desc()).all()
+
+        return render_template('search.html', form=form, query=query, posts=posts)
+
+
+@app.route('/admin')
+@login_required
+def admin():
+    admin_role = ROLE['admin']
+    if current_user.role == admin_role:
+        return render_template('admin.html')
+    else:
+        flash("Sorry, to access this page you must be an admin.", "danger")
+        return redirect(url_for('index'))
 
 # Filters
 @app.template_filter('get_comments_count')
 def get_comments_count(post_id):
     count = 0
     comments = Comment.query.filter_by(post_id=post_id)
-    for comment in comments:
+    for _ in comments:
         count += 1
     return count
 
-# @app.template_filter('get_username')
-# def get_username_name_by_user_key(user_id):
-#     user = User.query.filter_by(id=user_id).first_or_404()
-#     return user.username
 
-
-# @app.template_filter('get_avatar')
-# def get_username_avatar_by_user_key(user_id):
-#     user = User.query.filter_by(id=user_id).first_or_404()
-#     picture_path = url_for('static', filename='profile_pics/' + current_user.picture_file)
-#     return picture_path
-
-
-# @app.template_filter('get_date')
-# def get_date_by_datetime(datetime):
-#     date = str(datetime)[:10]
-#     return date
+# pass stuff to a navbar
+@app.context_processor
+def base():
+    form = SearchForm()
+    return dict(form=form)
 
 # @app.route('/cookie/')
 # def cookie():

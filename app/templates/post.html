@@ -71,4 +71,6 @@ Add post
             {{ form.submit(class="tm-btn tm-btn-primary tm-btn-small") }}
          </div>
     </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='text') }}
 {% endblock %}

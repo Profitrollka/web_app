@@ -106,5 +106,7 @@
             <p>Already have an Account? <a href="{{ url_for('login') }}" class="tm-color-primary">Sign in!</a></p>
         </div>
     </form>
+    {{ ckeditor.load() }}
+    {{ ckeditor.config(name='text') }}
 </div>
 {% endblock %}
