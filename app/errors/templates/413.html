@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title%}
+	{{ title }}
+{% endblock %}
+
+{% block content %}
+<div>
+	<span class="tm-h2">File Too Large</span>
+</div>
+<p class="row tm-row tm-mt-100 tm-mb-50"><a href="{{ url_for('index') }} " class="tm-btn-back">Back</a></p>
+{% endblock %}

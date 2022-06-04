@@ -1,0 +1,147 @@
+[2022-05-20 21:57:25,339] ERROR: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+
+[SQL: UPDATE post SET updated=%(updated)s, picture_file=%(picture_file)s WHERE post.post_id = %(post_post_id)s]
+[parameters: {'updated': datetime.datetime(2022, 5, 20, 18, 57, 25, 337461), 'picture_file': '8f716aaab117a5c6.jpeg', 'post_post_id': 8}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)
+Traceback (most recent call last):
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.StringDataRightTruncation: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/alenak/Projects/web_app/app/view.py", line 200, in update_post
+    db.session.commit()
+  File "<string>", line 2, in commit
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 1431, in commit
+    self._transaction.commit(_to_root=self.future)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 829, in commit
+    self._prepare_impl()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 808, in _prepare_impl
+    self.session.flush()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3363, in flush
+    self._flush(objects)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3503, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3463, in _flush
+    flush_context.execute()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 456, in execute
+    rec.execute(self)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 630, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 236, in save_obj
+    _emit_update_statements(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 1000, in _emit_update_statements
+    c = connection._execute_20(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1620, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 325, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1487, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1851, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2032, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.DataError: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+
+[SQL: UPDATE post SET updated=%(updated)s, picture_file=%(picture_file)s WHERE post.post_id = %(post_post_id)s]
+[parameters: {'updated': datetime.datetime(2022, 5, 20, 18, 57, 25, 337461), 'picture_file': '8f716aaab117a5c6.jpeg', 'post_post_id': 8}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)
+[2022-05-21 10:02:29,607] INFO: User admin logged in.
+[2022-05-21 10:02:43,028] INFO: User admin updated post 6.
+[2022-05-21 11:44:14,589] INFO: User admin updated post 2.
+[2022-05-21 11:47:44,114] INFO: User admin updated post 2.
+[2022-05-21 11:57:54,774] INFO: User admin updated post 2.
+[2022-05-21 11:59:44,834] INFO: User admin updated post 2.
+[2022-05-21 12:02:44,609] INFO: User admin updated post 2.
+[2022-05-21 12:20:42,233] INFO: User admin updated post 2.
+[2022-05-21 12:21:46,751] INFO: User admin updated post 2.
+[2022-05-21 12:45:25,869] INFO: User admin updated post 2.
+[2022-05-21 12:45:42,621] INFO: User admin updated post 1.
+[2022-05-21 12:48:46,234] INFO: User admin added new post.
+[2022-05-21 12:56:24,351] INFO: User admin updated post 21.
+[2022-05-21 12:58:01,130] INFO: User admin updated post 21.
+[2022-05-21 12:59:12,854] INFO: User admin updated post 21.
+[2022-05-21 13:00:55,204] INFO: User admin updated post 21.
+[2022-05-21 13:02:47,444] INFO: User admin updated post 21.
+[2022-05-21 13:37:04,802] INFO: User admin updated post 21.
+[2022-05-21 13:37:56,182] INFO: User admin updated post 21.
+[2022-05-21 13:38:36,742] INFO: User admin updated post 21.
+[2022-05-21 13:39:58,865] INFO: User admin updated post 21.
+[2022-05-21 13:41:33,963] INFO: User admin updated post 21.
+[2022-05-21 13:50:36,867] INFO: User admin added new comment.
+[2022-05-21 13:54:57,201] INFO: User admin added new comment.
+[2022-05-21 13:55:55,600] INFO: User admin added new comment.
+[2022-05-21 13:58:13,669] INFO: User admin added new comment.
+[2022-05-21 13:59:05,211] INFO: User admin added new comment.
+[2022-05-21 14:02:13,845] INFO: User admin added new comment.
+[2022-05-21 14:02:25,905] INFO: User admin added new comment.
+[2022-05-21 14:02:43,645] INFO: User admin added new comment.
+[2022-05-21 15:17:55,650] INFO: User admin updated comment 10.
+[2022-05-21 16:13:27,041] INFO: User admin deleted comment 6.
+[2022-05-21 16:13:35,036] INFO: User admin deleted comment 7.
+[2022-05-21 16:13:39,201] INFO: User admin deleted comment 8.
+[2022-05-21 16:13:45,588] INFO: User admin deleted comment 9.
+[2022-05-21 16:13:50,186] INFO: User admin deleted comment 11.
+[2022-05-21 16:13:53,903] INFO: User admin deleted comment 12.
+[2022-05-21 16:13:57,769] INFO: User admin deleted comment 13.
+[2022-05-21 17:17:52,403] INFO: User admin logged in.
+[2022-05-21 17:24:18,781] INFO: User admin updated post 6.
+[2022-05-21 17:27:01,025] INFO: User admin updated post 6.
+[2022-05-21 17:59:52,249] INFO: User ami logged in.
+[2022-05-21 18:01:13,916] INFO: User ami updated post 20.
+[2022-05-21 20:00:46,294] INFO: User ami logged in.
+[2022-05-21 20:01:04,378] INFO: User admin logged in.
+[2022-05-21 20:01:32,500] INFO: User admin logged in.
+[2022-05-21 20:01:46,603] INFO: User admin added new comment.
+[2022-05-21 20:05:12,340] INFO: User admin added new comment.
+[2022-05-21 20:05:29,751] INFO: User admin added new comment.
+[2022-05-21 20:07:01,934] INFO: User admin added new comment.
+[2022-05-21 20:08:33,906] INFO: User admin added new comment.
+[2022-05-21 21:37:18,828] INFO: User ami logged in.
+[2022-05-21 21:37:34,378] INFO: User ami added new comment.
+[2022-05-21 21:38:40,788] INFO: User ami added new comment.
+[2022-05-21 21:39:01,275] INFO: User ami added new comment.
+[2022-05-21 21:59:37,139] INFO: User ami deleted comment 19.
+[2022-05-21 21:59:41,604] INFO: User ami deleted comment 20.
+[2022-05-21 21:59:46,968] INFO: User ami deleted comment 21.
+[2022-05-21 21:59:58,538] INFO: User ami added new comment.
+[2022-05-21 22:01:10,123] INFO: User ami added new comment.
+[2022-05-21 22:01:19,121] INFO: User ami added new comment.
+[2022-05-21 22:01:42,836] INFO: User ami added new comment.
+[2022-05-21 22:03:22,849] INFO: User ami added new comment.
+[2022-05-21 22:03:34,416] INFO: User ami deleted comment 26.
+[2022-05-21 22:03:37,581] INFO: User ami deleted comment 25.
+[2022-05-21 22:03:40,581] INFO: User ami deleted comment 24.
+[2022-05-21 22:03:51,152] INFO: User ami added new comment.
+[2022-05-21 22:04:03,597] INFO: User ami deleted comment 27.
+[2022-05-21 22:04:43,914] INFO: User ami deleted comment 23.
+[2022-05-21 22:05:35,699] INFO: User ami added new comment.
+[2022-05-21 22:05:41,204] INFO: User ami added new comment.
+[2022-05-21 22:05:54,076] INFO: User ami deleted comment 29.
+[2022-05-21 22:06:12,830] INFO: User ami deleted comment 28.
+[2022-05-21 22:07:35,863] INFO: User ami added new comment.
+[2022-05-21 22:07:38,757] INFO: User ami added new comment.
+[2022-05-21 22:07:43,906] INFO: User ami deleted comment 31.
+[2022-05-21 22:07:46,992] INFO: User ami deleted comment 30.
+[2022-05-21 22:07:50,410] INFO: User ami deleted comment 22.
+[2022-05-21 22:08:18,531] INFO: User ami added new comment.
+[2022-05-21 22:08:23,629] INFO: User ami added new comment.
+[2022-05-21 22:08:30,844] INFO: User ami deleted comment 33.
+[2022-05-21 22:08:50,628] INFO: User ami added new comment.
+[2022-05-21 22:08:53,281] INFO: User ami added new comment.
