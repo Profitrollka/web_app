@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-
-{% block title%}
-	{{ title }}
-{% endblock %}
-
-{% block content %}
-<p class="row tm-row tm-mt-100 tm-mb-50"><a href="{{ url_for('profile', username=current_user.nickname) }} " class="tm-btn-back">Back</a></p>
-{% endblock %}

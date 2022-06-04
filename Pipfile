@@ -18,8 +18,10 @@ pillow = "*"
 python-dotenv = "*"
 flask-bcrypt = "*"
 werkzeug = "==2.0.3"
+flask-ckeditor = "*"
+flask-admin = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"

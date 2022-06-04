@@ -3,6 +3,11 @@ TemplateMo 553 Xtra Blog
 https://templatemo.com/tm-553-xtra-blog
 */
 
+*{
+margin: 0
+padding: 0
+}
+
 html { overflow-x: hidden; }
 
 body {
@@ -24,9 +29,6 @@ hr {
 .form-control:-ms-input-placeholder { color: #999; }  
 .form-control::placeholder { color: #999; }
 
-li { color: }
-
-
 .tm-header {
     background-color: #cfb6d7;
     color: white;
@@ -36,7 +38,9 @@ li { color: }
     bottom: 0;
     z-index: 100;
     width: 360px;
-    overflow-y: visible;     
+    overflow-y: visible;
+    border-radius: 100px;
+    box-shadow: 10px 10px 10px #eedaf5;
 }
 
 .tm-header-wrapper {
@@ -45,7 +49,7 @@ li { color: }
     -ms-overflow-style: none;
     padding: 40px;
     width: 100%;
-    height: 100%; 
+    height: 100%;
 }
 
 .tm-header-wrapper::-webkit-scrollbar {
@@ -61,7 +65,7 @@ li { color: }
 .tm-site-logo {
     width: 75px;
     height: 75px;
-    border-radius: 50%;
+    border-radius: 70%;
     background-color: white;    
     display: flex;
     align-items: center;
@@ -71,8 +75,8 @@ li { color: }
 .tm-site-logo i { color: #cfb6d7; }
 
 .tm-main {
-    margin-left: 300px;
-    padding: 5px 90px 20px;
+    margin-left: 400px;
+    margin-right: 20px;
 }
 
 .tm-post { max-width: 700px; }
@@ -127,8 +131,8 @@ li { color: }
 
 .tm-nav-link i { margin-right: 37px; }
 
-ul { 
-    margin: 0; 
+ul {
+    margin: 0;
     padding: 0;
 }
 
@@ -144,6 +148,7 @@ ul {
     padding-top: 8px; 
     margin-right: 15px;   
     margin-bottom: 15px;
+    border-radius: 50px;
 }
 
 .tm-social-icon { 
@@ -168,8 +173,9 @@ ul {
     height: 60px;
     width: 480px;
     margin-right: 30px;
-    border-radius: 0;
+    border-radius: 100px;
     border-color: #cfb6d7;
+    box-shadow: 10px 10px 10px #eedaf5;
     font-size: 1.2rem;
 }
 
@@ -179,6 +185,14 @@ ul {
     border: none;
     background-color: #cfb6d7;
     transition: all 0.3s ease;
+    border-radius: 100px;
+}
+
+.tm-search-button:hover { background-color: #af85bc; }
+
+.tm-search-icon {
+    color: white;
+    font-size: 1.3rem;
 }
 
 .tm-uploadButton {
@@ -193,22 +207,12 @@ ul {
     text-align: center;
     border-radius: 10px;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.uploadButton:hover {
-    background: #cfb6d7;
-}
+.tm-uploadButton:hover { background-color: #af85bc; }
 
-.uploadButton div{
-  color: #999;
-}
-
-.tm-search-button:hover { background-color: #af85bc; }
-
-.tm-search-icon {
-    color: white;
-    font-size: 1.3rem;
-}
+.uploadButton div { color: #999; }
 
 .tm-post-link {
     display: block;
@@ -220,6 +224,8 @@ ul {
 .tm-post-link-inner {
     overflow: hidden;
     background: #faf8fb;
+    box-shadow: 10px 10px 10px #eedaf5
+
 }
 
 .tm-post-link img {
@@ -230,6 +236,7 @@ ul {
 	min-height: auto;
 	max-width: 100%;
 	opacity: 0.8;
+	border-radius: 10px;
 }
 
 .effect-lily img {
@@ -252,14 +259,6 @@ ul {
 
 .tm-post { margin-bottom: 50px; }
 
-.tm-new-badge {
-    top: 25px;
-    right: -10px;
-    background-color: #cfb6d7;
-    color: white;
-    padding: 5px 20px;
-}
-
 .tm-post-title {
     font-size: 1.5rem;
     transition: all 0.3s ease;
@@ -268,6 +267,16 @@ ul {
 .tm-h3 {
     font-size: 1.3rem;
     color: #999;
+}
+
+.tm-h2 {
+    font-size: 1.5rem;
+    color: #999;
+}
+
+.list-group {
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px #eedaf5;
 }
 
 .tm-post-link:hover .tm-post-title { color: #cfb6d7; }
@@ -279,6 +288,8 @@ ul {
     transition: all 0.3s ease;
 }
 
+.tm-btn:hover { background-color: #af85bc; }
+
 .tm-btn-primary {    
     background-color: #cfb6d7;
     color: white;  
@@ -286,11 +297,16 @@ ul {
     border: none;
 }
 
+.tm-btn-primary:hover { background-color: #af85bc; }
+
 .tm-btn-primary-sm {    
     background-color: #cfb6d7;
     color: white;  
     border: none;
 }
+
+.tm-btn-primary-sm:hover { background-color: #af85bc; }
+
 .tm-btn-primary-sm-danger {
     background-color: #f2aac6;
     color: white;
@@ -317,11 +333,6 @@ ul {
     border: none;
 }
 
-.tm-btn-primary:hover {
-    background-color: #cfb6d7;
-    color: white;
-}
-
 .tm-paging-nav ul li {
     list-style: none;
     display: inline-block;
@@ -337,7 +348,7 @@ ul {
     height: 50px;
     display: flex;
     align-items: center;
-    justify-content: center;    
+    justify-content: center;
 }
 
 .tm-paging-item .tm-paging-link:hover,
@@ -394,7 +405,8 @@ video {
 .form-control {
     height: 45px;
     border-color: #cfb6d7;
-    border-radius: 0;
+    border-radius: 100px;
+    box-shadow: 10px 10px 10px #eedaf5;
 }
 
 .tm-comment-form { max-width: 360px; }
@@ -503,9 +515,7 @@ margin: 7px 0 7px 7px; /* Отступы вокруг картинки */
     }
 }
 
-.error {
-    color: red
-}
+.error { color: red }
 
 <style>
   p { font-family: monospace; width: 200px; border: 1px solid black; }
@@ -519,9 +529,7 @@ margin: 7px 0 7px 7px; /* Отступы вокруг картинки */
     }
 }
 
-@media (max-width: 1288px) {
-    .tm-social-link { margin-right: 10px; }
-}
+@media (max-width: 1288px) { .tm-social-link { margin-right: 10px; } }
 
 @media (max-width: 1199px) {
     .tm-post-sidebar { max-width: 440px; }

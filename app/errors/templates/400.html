@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title%}
+	{{ title }}
+{% endblock %}
+
+{% block content %}
+<div>
+	<span class="tm-h2">Bad Request Error</span>
+</div>
+<p class="row tm-row tm-mt-100 tm-mb-50 tm-colour-gray"><a href="{{ url_for('profile', username=current_user.nickname) }} " class="tm-btn-back">Back</a></p>
+{% endblock %}

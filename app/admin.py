@@ -1,7 +1,7 @@
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
-from flask_login import current_user, login_required
-from flask import redirect, url_for, request, flash
+from flask_login import current_user
+from flask import redirect, url_for, flash
 from . import app, models, db
 
 
@@ -44,4 +44,3 @@ admin.add_view(MyBlogModelView(models.User, db.session))
 admin.add_view(MyBlogModelView(models.Post, db.session))
 admin.add_view(MyBlogModelView(models.Tag, db.session))
 admin.add_view(MyBlogModelView(models.Comment, db.session))
-

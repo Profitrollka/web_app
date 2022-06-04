@@ -19,7 +19,6 @@ class BaseConfig:
     FLASK_ENV = environ.get('FLASK_ENV')
     UPLOAD_FOLDER_PROFILE = environ.get('UPLOAD_FOLDER_PROFILE')
     UPLOAD_FOLDER_POST = environ.get('UPLOAD_FOLDER_POST')
-    ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
 
     #Flask-Mail
     MAIL_SERVER = environ.get('MAIL_SERVER')

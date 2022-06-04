@@ -22,7 +22,7 @@
         <div class="tm-post-full">
             <div class="mb-4">
                 {% if post.author == current_user %}
-                    <a class="btn tm-btn-primary-sm btn-sm" href="{{ url_for('update_post', post_id=post_id) }}">Update</a>
+                    <a class="btn tm-btn-primary-sm btn-sm" href="{{ url_for('posts.update_post', post_id=post_id) }}">Update</a>
                     <!-- Button trigger modal -->
                     <button type="button" class="btn tm-btn-primary-sm-danger btn-sm" colour="#f5a4c4" data-bs-toggle="modal" data-bs-target="#deleteModal">
                       Delete
@@ -39,6 +39,7 @@
             <div>
                 <h2 class="tm-color-primary tm-post-title">Comments</h2>
                 <hr class="tm-hr-primary tm-mb-45">
+                {% if comments %}
                 {% for comment in comments %}
                 <div class="tm-comment tm-mb-45">
                     <figure class="tm-comment-figure tm-color-primary text-center">
@@ -47,20 +48,21 @@
                     <div>
                         <span class="tm-colour-primary">{{ comment.text }}
                         {% if comment.author == current_user %}
-                            <a class="btn tm-btn-primary-sm-new btn-sm" href="{{ url_for('update_comment', comment_id=comment.comment_id) }}">
+                            <a class="btn tm-btn-primary-sm-new btn-sm" href="{{ url_for('posts.update_comment', comment_id=comment.comment_id) }}">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a class="btn tm-btn-primary-sm-new btn-sm" href="{{ url_for('delete_comment', comment_id=comment.comment_id) }}">
+                            <a class="btn tm-btn-primary-sm-new btn-sm" href="{{ url_for('posts.delete_comment', comment_id=comment.comment_id) }}">
                                 <i class="fas fa-trash"></i>
                             </a>
                             {% endif %}
                     </div>
                 </div>
                 {% endfor %}
+                {% endif%}
                 <form action="" method="post" novalidate enctype="multipart/form-data">
                     {{ form.csrf_token() }}
                     <div class="form-group tm-color-gray">
-                        {{ form.text.label }}
+                        {{ form.text.placeholder }}
                         {% if form.text.errors %}
                         {{ form.text(class="form-control form-control-lg is-invalid") }}
                         <div class="invalid-feedback">
@@ -91,7 +93,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <form action="{{ url_for('delete_post', post_id=post.post_id) }}" method="POST">
+                    <form action="{{ url_for('posts.delete_post', post_id=post.post_id) }}" method="POST">
                         <input class="btn btn-danger" type="submit" value="Delete">
                     </form>
                 </div>
@@ -112,7 +114,7 @@
             <figure href="{{ url_for('static', filename='post_pics/'+post.picture_file) }}" class="effect-lily tm-post-link tm-pt-60">
                 <div class="tm-post-link-inner">
                     <p><img src="{{ url_for('static', filename='post_pics/'+post.picture_file) }}"/></p>
-                    <a href="{{ post.post_id }}" class="tm-color-primary">{{ post.title }}</a>
+                    <a href="{{ post.post_id }}" class="tm-color-primary tm-post-link-title">{{ post.title }}</a>
                 </div>
             </figure>
             <figure>

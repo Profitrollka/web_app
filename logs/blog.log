@@ -1,7 +1,7 @@
-[2022-05-20 21:57:25,339] ERROR: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+[2022-06-01 19:39:22,912] ERROR: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
 
-[SQL: UPDATE post SET updated=%(updated)s, picture_file=%(picture_file)s WHERE post.post_id = %(post_post_id)s]
-[parameters: {'updated': datetime.datetime(2022, 5, 20, 18, 57, 25, 337461), 'picture_file': '8f716aaab117a5c6.jpeg', 'post_post_id': 8}]
+[SQL: UPDATE "user" SET username=%(username)s, first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, about_me=%(about_me)s, picture_file=%(picture_file)s, updated=%(updated)s WHERE "user".user_id = %(user_user_id)s]
+[parameters: {'username': 'xopek', 'first_name': 'Alex', 'last_name': 'Momot', 'email': 'momot@ya.ru', 'about_me': '', 'picture_file': '5b0adfa8dcca222a.jpeg', 'updated': datetime.datetime(2022, 6, 1, 16, 39, 22, 910424), 'user_user_id': 4}]
 (Background on this error at: https://sqlalche.me/e/14/9h9h)
 Traceback (most recent call last):
   File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
@@ -14,7 +14,11 @@ psycopg2.errors.StringDataRightTruncation: value too long for type character var
 The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
-  File "/Users/alenak/Projects/web_app/app/view.py", line 200, in update_post
+  File "/Users/alenak/Projects/web_app/app/users/views.py", line 87, in profile
+    users.update(current_user)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 99, in update
+    self.save(model)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 36, in save
     db.session.commit()
   File "<string>", line 2, in commit
   File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 1431, in commit
@@ -59,36 +63,13 @@ Traceback (most recent call last):
     cursor.execute(statement, parameters)
 sqlalchemy.exc.DataError: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
 
-[SQL: UPDATE post SET updated=%(updated)s, picture_file=%(picture_file)s WHERE post.post_id = %(post_post_id)s]
-[parameters: {'updated': datetime.datetime(2022, 5, 20, 18, 57, 25, 337461), 'picture_file': '8f716aaab117a5c6.jpeg', 'post_post_id': 8}]
+[SQL: UPDATE "user" SET username=%(username)s, first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, about_me=%(about_me)s, picture_file=%(picture_file)s, updated=%(updated)s WHERE "user".user_id = %(user_user_id)s]
+[parameters: {'username': 'xopek', 'first_name': 'Alex', 'last_name': 'Momot', 'email': 'momot@ya.ru', 'about_me': '', 'picture_file': '5b0adfa8dcca222a.jpeg', 'updated': datetime.datetime(2022, 6, 1, 16, 39, 22, 910424), 'user_user_id': 4}]
 (Background on this error at: https://sqlalche.me/e/14/9h9h)
-[2022-05-21 10:02:29,607] INFO: User admin logged in.
-[2022-05-21 10:02:43,028] INFO: User admin updated post 6.
-[2022-05-21 11:44:14,589] INFO: User admin updated post 2.
-[2022-05-21 11:47:44,114] INFO: User admin updated post 2.
-[2022-05-21 11:57:54,774] INFO: User admin updated post 2.
-[2022-05-21 11:59:44,834] INFO: User admin updated post 2.
-[2022-05-21 12:02:44,609] INFO: User admin updated post 2.
-[2022-05-21 12:20:42,233] INFO: User admin updated post 2.
-[2022-05-21 12:21:46,751] INFO: User admin updated post 2.
-[2022-05-21 12:45:25,869] INFO: User admin updated post 2.
-[2022-05-21 12:45:42,621] INFO: User admin updated post 1.
-[2022-05-21 12:48:46,234] INFO: User admin added new post.
-[2022-05-21 12:56:24,351] INFO: User admin updated post 21.
-[2022-05-21 12:58:01,130] INFO: User admin updated post 21.
-[2022-05-21 12:59:12,854] INFO: User admin updated post 21.
-[2022-05-21 13:00:55,204] INFO: User admin updated post 21.
-[2022-05-21 13:02:47,444] INFO: User admin updated post 21.
-[2022-05-21 13:37:04,802] INFO: User admin updated post 21.
-[2022-05-21 13:37:56,182] INFO: User admin updated post 21.
-[2022-05-21 13:38:36,742] INFO: User admin updated post 21.
-[2022-05-21 13:39:58,865] INFO: User admin updated post 21.
-[2022-05-21 13:41:33,963] INFO: User admin updated post 21.
-[2022-05-21 13:50:36,867] INFO: User admin added new comment.
-[2022-05-21 13:54:57,201] INFO: User admin added new comment.
-[2022-05-21 13:55:55,600] INFO: User admin added new comment.
-[2022-05-21 13:58:13,669] INFO: User admin added new comment.
-[2022-05-21 13:59:05,211] INFO: User admin added new comment.
-[2022-05-21 14:02:13,845] INFO: User admin added new comment.
-[2022-05-21 14:02:25,905] INFO: User admin added new comment.
-[2022-05-21 14:02:43,645] INFO: User admin added new comment.
+[2022-06-01 19:42:48,380] INFO: User xopek updated profile.
+[2022-06-02 20:07:55,484] INFO: User xopek added new post.
+[2022-06-02 22:59:59,141] INFO: User admin logged in.
+[2022-06-04 11:44:55,866] INFO: User admin logged in.
+[2022-06-04 11:45:15,948] INFO: User admin updated post 24.
+[2022-06-04 15:57:00,693] INFO: User admin logged in.
+[2022-06-04 15:57:38,361] INFO: User admin added new post.

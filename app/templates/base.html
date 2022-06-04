@@ -31,12 +31,12 @@
                         Home
                     </a></li>
                     {% if current_user.is_anonymous %}
-                    <li class="tm-nav-item"><a href="{{ url_for('login') }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('users.login') }}" class="tm-nav-link">
                         <i class="fas fa-sign-in-alt"></i>
                         Login
                     </a></li>
                     {%  else %}
-                    <li class="tm-nav-item"><a href="{{ url_for('logout') }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('users.logout') }}" class="tm-nav-link">
                         <i class="fas fa-sign-out-alt"></i>
                         Logout
                     </a></li>
@@ -47,7 +47,7 @@
                         Admin
                     </a></li>
                     {% endif %}
-                    <li class="tm-nav-item"><a href="{{ url_for('new_post') }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('posts.new_post') }}" class="tm-nav-link">
                         <i class="fas fa-pen"></i>
                         Add Post
                     </a></li>
@@ -59,7 +59,7 @@
                         <i class="far fa-comments"></i>
                         Contact Us
                     </a></li>
-                    <li class="tm-nav-item"><a href="{{ url_for('profile', username=current_user.username) }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('users.profile', username=current_user.username) }}" class="tm-nav-link">
                         <i class="far fa-user-circle"></i>
                         Profile
                     </a></li>
