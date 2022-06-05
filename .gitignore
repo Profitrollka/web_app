@@ -36,5 +36,3 @@ instance/
 .webassets-cache
 
 .DS_Store
-
-.idea
