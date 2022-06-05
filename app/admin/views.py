@@ -1,8 +1,8 @@
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
-from flask import redirect, url_for, flash
-from . import app, models, db
+from flask import redirect, url_for, flash, current_app
+from app import models, db
 
 
 class MyBlogModelView(ModelView):
@@ -39,7 +39,7 @@ class MyBlogAdminIndexView(AdminIndexView):
             return redirect(url_for('login'))
 
 
-admin = Admin(app, index_view=MyBlogAdminIndexView())
+admin = Admin(current_app, index_view=MyBlogAdminIndexView())
 admin.add_view(MyBlogModelView(models.User, db.session))
 admin.add_view(MyBlogModelView(models.Post, db.session))
 admin.add_view(MyBlogModelView(models.Tag, db.session))

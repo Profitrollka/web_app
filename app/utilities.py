@@ -1,7 +1,7 @@
 import secrets
 from PIL import Image
 from os import path
-from . import app
+from flask import current_app
 
 
 class Picture:
@@ -18,7 +18,7 @@ class Picture:
     def save_picture(self, folder: str) -> None:
         """Function save picture to received in parameters folder."""
         picture_for_save = Image.open(self.path)
-        self.path = path.join(app.root_path, 'static', folder, self.name)
+        self.path = path.join(current_app.root_path, 'static', folder, self.name)
         picture_for_save.save(self.path)
 
 

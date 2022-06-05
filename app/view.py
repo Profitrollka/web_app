@@ -1,13 +1,13 @@
-from flask import render_template, flash, redirect, url_for, request, send_from_directory, jsonify
+from flask import render_template, flash, redirect, url_for, request, send_from_directory, jsonify, current_app
 from flask_login import current_user, login_required
 from app.forms import SearchForm
 from os import path
-from . import app
-from .core import *
 from json import loads
+from . import db
+from .models import Post, Comment, Tag, post_tags, ROLE
 
 
-@app.route('/')
+@current_app.route('/')
 def index():
     query = request.args.get('query')
     if query:
@@ -19,7 +19,7 @@ def index():
 
 
 # Filters
-@app.template_filter('get_comments_count')
+@current_app.template_filter('get_comments_count')
 def get_comments_count(post_id: int):
     count = 0
     comments = Comment.query.filter_by(post_id=post_id)
@@ -28,26 +28,26 @@ def get_comments_count(post_id: int):
     return count
 
 
-@app.route('/posts/search', methods=['GET'])
+@current_app.route('/posts/search', methods=['GET'])
 def search_posts():
     tags = loads(request.data['tags'])
     posts = db.session.query(Post).join(post_tags).join(Tag).filter(Tag.tag.in_(tags)).group_by(Post.post_id).all()
     return jsonify(posts)
 
 
-@app.route('/contact')
+@current_app.route('/contact')
 def contact():
     return render_template('contact.html', title='Contact')
 
 
-@app.route('/about')
+@current_app.route('/about')
 def about():
     return render_template('about.html', title='About')
 
 
-@app.route('/search_by_tag/<tagname>', methods=["GET"])
-def search_by_tag(tag_name: str):
-    tag = Tag.query.filter_by(tag_name=tag_name).first()
+@current_app.route('/search_by_tag/<tagname>', methods=["GET"])
+def search_by_tag(tagname: str):
+    tag = Tag.query.filter_by(tag_name=tagname).first()
     posts_id = db.session.query(post_tags).filter_by(tag_id=tag.tag_id).all()
     posts = []
     for post_id in posts_id:
@@ -56,7 +56,7 @@ def search_by_tag(tag_name: str):
     return render_template('tags.html', title='Posts', posts=posts)
 
 
-@app.route('/search_by_query', methods=["POST"])
+@current_app.route('/search_by_query', methods=["POST"])
 def search_by_query():
     form = SearchForm()
     posts = Post.query
@@ -67,7 +67,7 @@ def search_by_query():
         return render_template('search.html', form=form, query=query, posts=posts)
 
 
-@app.route('/admin')
+@current_app.route('/admin')
 @login_required
 def admin():
     admin_role = ROLE['admin']
@@ -79,13 +79,13 @@ def admin():
 
 
 # pass stuff to a navbar
-@app.context_processor
+@current_app.context_processor
 def base():
     form = SearchForm()
     return dict(form=form)
 
 
-@app.route('/uploads/<path:name>')
+@current_app.route('/uploads/<path:name>')
 def uploaded_file(name):
     return send_from_directory(path.abspath(path.dirname(__file__))+"/static/post_pics", name)
 

@@ -1,4 +1,6 @@
-from .core import PostsService, TagsService, CommentsService, UsersService
+from .posts import PostsService, TagsService, CommentsService
+from .users import UsersService
+
 
 #: An instance of the :class:`UsersService` class
 user_service = UsersService()

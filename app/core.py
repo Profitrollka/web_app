@@ -1,5 +1,6 @@
 from .models import *
 from sqlalchemy import desc
+from . import db
 
 
 class Service(object):
@@ -126,23 +127,3 @@ class Service(object):
         self._isinstance(model)
         db.session.delete(model)
         db.session.commit()
-
-
-class PostsService(Service):
-    __model__ = Post
-
-
-class TagsService(Service):
-    __model__ = Tag
-
-
-class CommentsService(Service):
-    __model__ = Comment
-
-
-class UsersService(Service):
-    __model__ = User
-
-
-class PostTagService(Service):
-    __model__ = post_tags

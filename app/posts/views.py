@@ -61,10 +61,10 @@ def single_post(post_id: int):
     if request.method == 'POST':
         if current_user.is_authenticated:
             if form.validate_on_submit():
-                comment = app.servises.post_service.new(text=form.text.data, user_id=current_user.user_id,
+                comment = app.servises.comment_service.new(text=form.text.data, user_id=current_user.user_id,
                                                         post_id=post_id)
                 try:
-                    app.servises.post_service.save(comment)
+                    app.servises.comment_service.save(comment)
                     flash('Your comment has been added!', 'success')
                     current_app.logger.info(f'User {current_user.username} added new comment.')
                 except Exception as e:

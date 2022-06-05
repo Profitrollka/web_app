@@ -6,7 +6,7 @@ from flask_ckeditor import CKEditorField
 from .models import User
 
 
-class ExtraValidatorsMixin(object):
+class ExtraValidatorsMixin:
 
     ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
     EXCLUDED_CHARS = "*?!^+%&/()=][}{#$"
