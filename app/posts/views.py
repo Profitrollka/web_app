@@ -142,7 +142,7 @@ def delete_post(post_id: int):
         remove(path)
         flash('Your post has been deleted!', 'success')
         current_app.logger.info(f'User {current_user.username} deleted post {post.post_id}.')
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     except Exception as e:
         flash('An error occurred while deleting post. Please try again later.', 'danger')
         current_app.logger.warning(f"An error occurred while saving data (delete post)")

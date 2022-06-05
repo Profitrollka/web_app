@@ -1,5 +1,6 @@
 from os import environ, path
 from dotenv import load_dotenv
+from typing import NamedTuple
 
 basedir = path.abspath(path.dirname(__file__))
 dotenv_path = path.join(basedir, '.env')
@@ -28,7 +29,7 @@ load_dotenv(dotenv_path)
     # ADMINS = environ.get('ADMINS')
 
 
-class Config(object):
+class BaseConfig:
     """Base configuration."""
 
     SECRET_KEY = environ.get('SECRET_KEY')
@@ -40,21 +41,21 @@ class Config(object):
     # def init_app(app):
     #     pass
 
-class ProductionConfig(Config):
+class ProductionConfig(BaseConfig):
     """Production configuration."""
 
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
 
 
-class DevelopmentConfig(Config):
+class DevelopmentConfig(BaseConfig):
     """Development configuration."""
 
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
 
 
-class TestingConfig(Config):
+class TestingConfig(BaseConfig):
     """Test configuration."""
 
     DEBUG = True
@@ -62,8 +63,13 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = environ.get("TEST_DATABASE_URL")
 
 
-config = {
-   'development': DevelopmentConfig,
-   'testing': TestingConfig,
-   'default': DevelopmentConfig}
+class Configuration(NamedTuple):
+    development: str
+    testing: str
+    production: str
+
+
+config = Configuration(development=DevelopmentConfig,
+                       testing=TestingConfig,
+                       production=ProductionConfig)
 

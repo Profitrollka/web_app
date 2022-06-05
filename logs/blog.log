@@ -78,3 +78,7 @@ Traceback (most recent call last):
     raise ValueError('%s is not of type %s' % (model, self.__model__))
 ValueError: <None:wayyyy!> is not of type <class 'app.posts.models.Post'>
 [2022-06-04 19:27:52,276] INFO: User admin added new comment.
+[2022-06-05 12:31:42,930] INFO: User admin logged in.
+[2022-06-05 12:35:34,836] INFO: User ami logged in.
+[2022-06-05 12:39:03,001] INFO: User ami logged in.
+[2022-06-05 12:42:31,662] INFO: User admin logged in.

@@ -26,7 +26,7 @@
             </div>
             <nav class="tm-nav" id="tm-nav">
                 <ul>
-                    <li class="tm-nav-item"><a href="{{ url_for('index') }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('main.index') }}" class="tm-nav-link">
                         <i class="fas fa-home"></i>
                         Home
                     </a></li>
@@ -42,7 +42,7 @@
                     </a></li>
                     {% endif %}
                     {% if current_user.role == 2 %}
-                    <li class="tm-nav-item"><a href="{{ url_for('admin') }}" class="tm-nav-link">
+                    <li class="tm-nav-item"><a href="{{ url_for('admin.index') }}" class="tm-nav-link">
                         <i class="fas fa-solid fa-hammer"></i>
                         Admin
                     </a></li>
@@ -89,7 +89,7 @@
             <!-- Search form -->
             <div class="row tm-row">
                 <div class="col-12">
-                    <form method="POST" action="{{ url_for('search_by_query') }}" class="form-inline tm-mb-80 tm-search-form">
+                    <form method="POST" action="{{ url_for('main.search_by_query') }}" class="form-inline tm-mb-80 tm-search-form">
                         {{ form.csrf_token() }}
                         <input class="form-control tm-search-input" name="query" type="text" placeholder="Search..." aria-label="Search">
                         <button class="tm-search-button" type="submit">

@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-between tm-pt-60">
             <span class="d-block text-right tm-color-link">
                 {% for tag in post.tags %}
-                    <a href="{{ url_for('search_by_tag', tagname=tag.tag_name) }}" class="tm-color-link">{{ tag }}</a>
+                    <a href="{{ url_for('main.search_by_tag', tagname=tag.tag_name) }}" class="tm-color-link">{{ tag }}</a>
                 {% endfor %}
             </span>
             <span class="tm-color-primary">{{ post.created.strftime('%Y-%m-%d') }}</span>
@@ -33,8 +33,8 @@
     {% endfor %}
     <div class="row tm-row tm-mt-100 tm-mb-75">
         <div class="tm-prev-next-wrapper">
-        <a href="{{ url_for('index', page=page_num) }}" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Prev</a>
-        <a href="{{ url_for('index', page=page_num) }}" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
+        <a href="{{ url_for('main.index', page=page_num) }}" class="mb-2 tm-btn tm-btn-primary tm-prev-next disabled tm-mr-20">Prev</a>
+        <a href="{{ url_for('main.index', page=page_num) }}" class="mb-2 tm-btn tm-btn-primary tm-prev-next">Next</a>
         </div>
         <div class="tm-paging-wrapper">
             {% for page_num in posts.iter_pages() %}
@@ -42,7 +42,7 @@
                     <nav class="tm-paging-nav d-inline-block">
                         <ul>
                             <li class="tm-paging-item active">
-                                <a href="{{ url_for('index', page=page_num) }}"  class="mb-2 tm-btn tm-paging-link">{{ page_num }}</a>
+                                <a href="{{ url_for('main.index', page=page_num) }}"  class="mb-2 tm-btn tm-paging-link">{{ page_num }}</a>
                             </li>
 <!--                             <li class="tm-paging-item">
                                 <a href="url_for('home', page=page_num)" class="mb-2 tm-btn tm-paging-link">{{ page_num }}</a>

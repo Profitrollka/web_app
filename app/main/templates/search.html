@@ -1,19 +1,23 @@
 {% extends 'base.html' %}
 {% block content%}
 <div class="row tm-row">
-        {% for post in posts %}
+    <h3 class="tm-color-primary">Searching results for: {{ query }}</h3>
+    {% for post in posts %}
     <article class="col-12 col-md-6 tm-post">
-        <hr class="tm-hr-primary ">
+        <hr class="tm-hr-primary">
         <a href="{{ url_for('posts.single_post', post_id=post.post_id) }}" class="effect-lily tm-post-link tm-pt-60">
             <div class="tm-post-link-inner tm-pt-55">
                 <img src="{{ url_for('static', filename='post_pics/'+post.picture_file) }}"/>
             </div>
-            <span class="position-absolute tm-new-badge">New</span>
             <h2 class="tm-pt-25 tm-color-primary tm-post-title">{{ post.title }}</h2>
         </a>
         <p class="tm-pt-35"> {{ post.intro }}</p>
         <div class="d-flex justify-content-between tm-pt-60">
-            <span class="tm-color-primary">Travel . Italy</span>
+            <span class="d-block text-right tm-color-primary">
+                {% for tag in post.tags %}
+                    <a href="{{ url_for('search_by_tag', tagname=tag.tag_name) }}" class="tm-color-link">{{ tag }}</a>
+                {% endfor %}
+            </span>
             <span class="tm-color-primary">{{ post.created.strftime('%Y-%m-%d') }}</span>
         </div>
         <hr>
@@ -23,5 +27,5 @@
         </div>
     </article>
     {% endfor %}
-</div>>
+</div>
 {% endblock %}

@@ -18,11 +18,11 @@ migrate = Migrate()
 bcrypt = Bcrypt()
 ckeditor = CKEditor()
 login_manager = LoginManager()
-login_manager.login_view = 'login'
-login_manager.login_message_category = 'info'
+login_manager.login_view = 'users.login'
+login_manager.login_message_category = 'danger'
 
 
-def create_app(config="development"):
+def create_app(config=config.development):
     app = Flask(__name__)
     app.config.from_object(config)
 
@@ -50,15 +50,13 @@ def create_app(config="development"):
         from app.posts import bp as posts_bp
         app.register_blueprint(posts_bp)
 
-        # from app.admin import bp as admin_bp
-        # app.register_blueprint(admin_bp)
+        from app.main import bp as main_bp
+        app.register_blueprint(main_bp)
+
+        from app.admin import bp as admin_bp
+        app.register_blueprint(admin_bp)
 
     return app
 
+
 from . import models
-# from app.admin import *
-
-
-
-
-

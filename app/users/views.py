@@ -12,7 +12,7 @@ from app import bcrypt
 @bp.route('/login', methods=['POST', 'GET'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = app.servises.user_service.first(username=form.username.data)
@@ -21,7 +21,7 @@ def login():
             next_page = request.args.get('next')
             flash(f'User {form.username.data} has been logged in!', 'success')
             current_app.logger.info(f'User {user.username} logged in.')
-            return redirect(next_page) if next_page else redirect(url_for('index'))
+            return redirect(next_page) if next_page else redirect(url_for('main.index'))
         else:
             flash("Login Unsuccessful. Please check username or password.", 'danger')
             return redirect(url_for('users.login', next=request.endpoint))
@@ -38,7 +38,7 @@ def logout():
 def register():
     picture_file = ProfilePicture(current_app.config['UPLOAD_FOLDER_PROFILE'])
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('main.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         if form.file.data:

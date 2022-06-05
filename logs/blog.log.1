@@ -1,0 +1,102 @@
+[2022-06-01 19:39:22,912] ERROR: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+
+[SQL: UPDATE "user" SET username=%(username)s, first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, about_me=%(about_me)s, picture_file=%(picture_file)s, updated=%(updated)s WHERE "user".user_id = %(user_user_id)s]
+[parameters: {'username': 'xopek', 'first_name': 'Alex', 'last_name': 'Momot', 'email': 'momot@ya.ru', 'about_me': '', 'picture_file': '5b0adfa8dcca222a.jpeg', 'updated': datetime.datetime(2022, 6, 1, 16, 39, 22, 910424), 'user_user_id': 4}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)
+Traceback (most recent call last):
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.StringDataRightTruncation: value too long for type character varying(20)
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/alenak/Projects/web_app/app/users/views.py", line 87, in profile
+    users.update(current_user)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 99, in update
+    self.save(model)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 36, in save
+    db.session.commit()
+  File "<string>", line 2, in commit
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 1431, in commit
+    self._transaction.commit(_to_root=self.future)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 829, in commit
+    self._prepare_impl()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 808, in _prepare_impl
+    self.session.flush()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3363, in flush
+    self._flush(objects)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3503, in _flush
+    transaction.rollback(_capture_exception=True)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/session.py", line 3463, in _flush
+    flush_context.execute()
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 456, in execute
+    rec.execute(self)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/unitofwork.py", line 630, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 236, in save_obj
+    _emit_update_statements(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/orm/persistence.py", line 1000, in _emit_update_statements
+    c = connection._execute_20(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1620, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/sql/elements.py", line 325, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1487, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1851, in _execute_context
+    self._handle_dbapi_exception(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 2032, in _handle_dbapi_exception
+    util.raise_(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/util/compat.py", line 207, in raise_
+    raise exception
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/base.py", line 1808, in _execute_context
+    self.dialect.do_execute(
+  File "/Users/alenak/.local/share/virtualenvs/web_app-CmvQIF_o/lib/python3.9/site-packages/sqlalchemy/engine/default.py", line 732, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.DataError: (psycopg2.errors.StringDataRightTruncation) value too long for type character varying(20)
+
+[SQL: UPDATE "user" SET username=%(username)s, first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, about_me=%(about_me)s, picture_file=%(picture_file)s, updated=%(updated)s WHERE "user".user_id = %(user_user_id)s]
+[parameters: {'username': 'xopek', 'first_name': 'Alex', 'last_name': 'Momot', 'email': 'momot@ya.ru', 'about_me': '', 'picture_file': '5b0adfa8dcca222a.jpeg', 'updated': datetime.datetime(2022, 6, 1, 16, 39, 22, 910424), 'user_user_id': 4}]
+(Background on this error at: https://sqlalche.me/e/14/9h9h)
+[2022-06-01 19:42:48,380] INFO: User xopek updated profile.
+[2022-06-02 20:07:55,484] INFO: User xopek added new post.
+[2022-06-02 22:59:59,141] INFO: User admin logged in.
+[2022-06-04 11:44:55,866] INFO: User admin logged in.
+[2022-06-04 11:45:15,948] INFO: User admin updated post 24.
+[2022-06-04 15:57:00,693] INFO: User admin logged in.
+[2022-06-04 15:57:38,361] INFO: User admin added new post.
+[2022-06-04 19:13:47,004] WARNING: An error occurred while saving data (add new tag)
+[2022-06-04 19:13:47,004] ERROR: name 'db' is not defined
+Traceback (most recent call last):
+  File "/Users/alenak/Projects/web_app/app/posts/views.py", line 32, in new_post
+    app.servises.tag_service.save(tag)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 36, in save
+    db.session.add(model)
+NameError: name 'db' is not defined
+[2022-06-04 19:13:47,005] WARNING: An error occurred while saving data (add new tag)
+[2022-06-04 19:13:47,005] ERROR: name 'db' is not defined
+Traceback (most recent call last):
+  File "/Users/alenak/Projects/web_app/app/posts/views.py", line 32, in new_post
+    app.servises.tag_service.save(tag)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 36, in save
+    db.session.add(model)
+NameError: name 'db' is not defined
+[2022-06-04 19:13:47,006] WARNING: An error occurred while saving data (add new post)
+[2022-06-04 19:13:47,006] ERROR: name 'db' is not defined
+Traceback (most recent call last):
+  File "/Users/alenak/Projects/web_app/app/posts/views.py", line 40, in new_post
+    app.servises.post_service.save(post)
+  File "/Users/alenak/Projects/web_app/app/core.py", line 36, in save
+    db.session.add(model)
+NameError: name 'db' is not defined
+[2022-06-04 19:15:46,498] INFO: User admin added new post.
+[2022-06-04 19:17:38,831] INFO: User admin logged in.
+[2022-06-04 19:24:38,495] WARNING: An error occurred while saving data (add new comment)

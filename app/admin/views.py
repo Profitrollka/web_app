@@ -17,9 +17,9 @@ class MyBlogModelView(ModelView):
     def inaccessible_callback(self, name, **kwargs):
         if current_user.is_authenticated:
             flash("Sorry, to access this page you must be an admin.", "danger")
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
         else:
-            return redirect(url_for('login'))
+            return redirect(url_for('users.login'))
 
 
 class MyBlogAdminIndexView(AdminIndexView):
@@ -34,9 +34,9 @@ class MyBlogAdminIndexView(AdminIndexView):
     def inaccessible_callback(self, name, **kwargs):
         if current_user.is_authenticated:
             flash("Sorry, to access this page you must be an admin.", "danger")
-            return redirect(url_for('index'))
+            return redirect(url_for('main.index'))
         else:
-            return redirect(url_for('login'))
+            return redirect(url_for('users.login'))
 
 
 admin = Admin(current_app, index_view=MyBlogAdminIndexView())
